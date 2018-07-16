@@ -56,7 +56,8 @@ export default () => ({
       obj,
       { input },
       {
-        User,
+        mailer,
+        req,
         req: { t }
       }
     ) {
@@ -81,22 +82,22 @@ export default () => ({
             isActive = true;
           }
 
-          [userId] = await context.User.register({ ...input, isActive });
+          [userId] = await User.register({ ...input, isActive });
 
           // if user has previously logged with facebook auth
         } else {
-          await context.User.updatePassword(emailExists.userId, input.password);
+          await User.updatePassword(emailExists.userId, input.password);
           userId = emailExists.userId;
         }
 
-        const user = await context.User.getUser(userId);
+        const user = await User.getUser(userId);
 
-        if (context.mailer && settings.user.auth.password.sendConfirmationEmail && !emailExists && context.req) {
+        if (mailer && settings.user.auth.password.sendConfirmationEmail && !emailExists && req) {
           // async email
           jwt.sign({ user: pick(user, 'id') }, settings.user.secret, { expiresIn: '1d' }, (err, emailToken) => {
             const encodedToken = Buffer.from(emailToken).toString('base64');
             const url = `${__WEBSITE_URL__}/confirmation/${encodedToken}`;
-            context.mailer.sendMail({
+            mailer.sendMail({
               from: `${settings.app.name} <${process.env.EMAIL_USER}>`,
               to: user.email,
               subject: 'Confirm Email',
@@ -164,14 +165,14 @@ export default () => ({
 
         const token = Buffer.from(reset.token, 'base64').toString();
         const { email, password } = jwt.verify(token, settings.user.secret);
-        const user = await context.User.getUserByEmail(email);
+        const user = await User.getUserByEmail(email);
         if (user.passwordHash !== password) {
           e.setError('token', t('user:auth.password.invalidToken'));
           e.throwIf();
         }
 
         if (user) {
-          await context.User.updatePassword(user.id, reset.password);
+          await User.updatePassword(user.id, reset.password);
         }
         return { errors: null };
       } catch (e) {
