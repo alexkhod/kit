@@ -1,3 +1,4 @@
+import testmodule from './testmodule';
 import cookies from './cookies';
 import i18n from './i18n';
 import counter from './counter';
@@ -14,6 +15,7 @@ import './debug';
 import Feature from './connector';
 
 export default new Feature(
+  testmodule,
   cookies,
   i18n,
   counter,

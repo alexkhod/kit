@@ -1,3 +1,4 @@
+import testmodule from './testmodule';
 import defaultRouter from './defaultRouter';
 import i18n from './i18n';
 import counter from './counter';
@@ -13,6 +14,7 @@ import './favicon';
 import Feature from './connector';
 
 export default new Feature(
+  testmodule,
   defaultRouter,
   counter,
   post,
