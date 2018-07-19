@@ -23,3 +23,5 @@ export { default as IconButton } from './IconButton';
 export { default as LanguagePicker } from './LanguagePicker';
 export { default as Root } from './Root';
 export { default as Pagination } from './Pagination';
+export { default as RenderSelectQuery } from './RenderSelectQuery';
+export { default as RenderDatePicker } from './RenderDatePicker';

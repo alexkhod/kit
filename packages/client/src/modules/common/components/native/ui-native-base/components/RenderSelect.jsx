@@ -4,26 +4,27 @@ import { Platform, StyleSheet, View, Text } from 'react-native';
 import Select from './Select';
 import RenderSelectStyles from '../styles/RenderSelect';
 
-const RenderSelect = ({ style, label, ...props }) => {
+const RenderSelect = ({ renderSelectStyles, label, ...props }) => {
   const selectProps = {
     iconName: 'caret-down',
     icon: true,
     iconSize: 20,
     ...props
   };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, renderSelectStyles.container]}>
       {Platform.OS === 'ios' ? (
-        <View style={styles.itemContainer}>
-          {label && <Text style={styles.itemTitle}>{label}</Text>}
-          <View style={styles.itemAction}>
+        <View style={[styles.itemContainer, renderSelectStyles.itemContainer]}>
+          {label && <Text style={[styles.itemTitle, renderSelectStyles.itemTitle]}>{label}</Text>}
+          <View style={[styles.itemAction, renderSelectStyles.itemAction]}>
             <Select {...selectProps} />
           </View>
         </View>
       ) : (
-        <View style={styles.itemContainer}>
-          {label && <Text style={styles.itemTitle}>{label}</Text>}
-          <View style={styles.itemAction}>
+        <View style={[styles.itemContainer, renderSelectStyles.itemContainer]}>
+          {label && <Text style={[styles.itemTitle, renderSelectStyles.itemTitle]}>{label}</Text>}
+          <View style={[styles.itemAction, renderSelectStyles.itemAction]}>
             <Select {...props} />
           </View>
         </View>
@@ -34,7 +35,8 @@ const RenderSelect = ({ style, label, ...props }) => {
 
 RenderSelect.propTypes = {
   style: PropTypes.number,
-  label: PropTypes.string
+  label: PropTypes.string,
+  renderSelectStyles: PropTypes.object
 };
 
 const styles = StyleSheet.create(RenderSelectStyles);

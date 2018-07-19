@@ -43,3 +43,33 @@ const getPlatform = () => {
 };
 
 export const PLATFORM = getPlatform();
+
+const removeBySchema = (key, obj, schema) => {
+  if (schema === null) {
+    return obj[key] !== '';
+  } else {
+    const schemaKey = key.endsWith('Id') ? key.substring(0, key.length - 2) : key;
+    if (schema.values[schemaKey].type.isSchema) {
+      return obj[key] !== '' && obj[key] !== 0;
+    } else {
+      return obj[key] !== '';
+    }
+  }
+};
+
+export const removeEmpty = (obj, schema = null) => {
+  return Object.keys(obj)
+    .filter(key => removeBySchema(key, obj, schema))
+    .reduce((redObj, key) => {
+      redObj[key] = obj[key];
+      return redObj;
+    }, {});
+};
+
+export const add3Dots = (string, limit) => {
+  const dots = '...';
+  if (string.length > limit) {
+    string = string.substring(0, limit) + dots;
+  }
+  return string;
+};

@@ -8,7 +8,7 @@ export default class FieldAdapter extends Component {
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     name: PropTypes.string.isRequired,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.bool, PropTypes.string, PropTypes.number, PropTypes.object]),
     defaultValue: PropTypes.string,
     checked: PropTypes.bool,
     defaultChecked: PropTypes.bool,
@@ -87,6 +87,8 @@ export default class FieldAdapter extends Component {
     return React.createElement(component, {
       ...this.props,
       input,
+      setFieldValue: formik.setFieldValue,
+      setFieldTouched: formik.setFieldTouched,
       meta
     });
   }
