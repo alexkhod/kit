@@ -1,0 +1,133 @@
+# Zver
+type Zver {
+  id: Int!
+  inv: String!
+  isWork: Boolean!
+  blocks: [Block]
+  comments: [Comment]
+}
+
+# Block
+type Block {
+  id: Int!
+  inv: String!
+  isWork: Boolean!
+  modules: [Module]
+  comments: [Comment]
+}
+
+# Module
+type Module {
+  id: Int!
+  inv: String!
+  isWork: Boolean!
+  comments: [Comment]
+}
+
+# Comment
+type Comment {
+  id: Int!
+  content: String!
+}
+
+# Edges for Zvers
+type ZverEdges {
+  node: Zver
+  cursor: Int
+}
+
+# PageInfo for Zvers
+type ZverPageInfo {
+  endCursor: Int
+  hasNextPage: Boolean
+}
+
+# Zvers relay-style pagination query
+type Zvers {
+  totalCount: Int
+  edges: [ZverEdges]
+  pageInfo: ZversPageInfo
+}
+
+extend type Query {
+  # Zvers pagination query
+  zvers(limit: Int, after: Int): Zvers
+  # Zver
+  zver(id: Int!): Zver
+}
+
+extend type Mutation {
+  # Create new zver
+  addZver(input: AddZverInput!): Zver
+  # Delete a zver
+  deleteZver(id: Int!): Zver
+  # Edit a zver
+  editZver(input: EditZverInput!): Zver
+  # Add block to zver
+  addBlock(input: AddBlockInput!): Block
+  # Delete a block
+  deleteBlock(input: DeleteBlockInput!): Block
+  # Edit a block
+  editBlock(input: EditBlockInput!): Block
+}
+
+# Input for addZver Mutation
+input AddZverInput {
+  inv: String!
+  isWork: Boolean!
+}
+
+# Input for editZver Mutation
+input EditZverInput {
+  id: Int!
+  inv: String!
+  isWork: Boolean!
+}
+
+# Input for addBlock Mutation
+input AddBlockInput {
+  inv: String!
+  isWork: Boolean!
+  # Needed for blockUpdated Subscription filter
+  zverId: Int!
+}
+
+# Input for editBlock Mutation
+input DeleteBlockInput {
+  id: Int!
+  # Needed for blockUpdated Subscription filter
+  zverId: Int!
+}
+
+# Input for deleteBlock Mutation
+input EditBlockInput {
+  id: Int!
+  inv: String!
+  isWork: Boolean!
+  # Needed for blockUpdated Subscription filter
+  zverId: Int!
+}
+
+extend type Subscription {
+  # Subscription for when editing a zver
+  zverUpdated(id: Int!): UpdateZverPayload
+  # Subscription for zver list
+  zversUpdated(endCursor: Int!): UpdateZverPayload
+  # Subscription for blocks
+  blockUpdated(zverId: Int!): UpdateBlockPayload
+}
+
+# Payload for zversUpdated Subscription
+type UpdateZverPayload {
+  mutation: String!
+  id: Int!
+  node: Zver
+}
+
+# Payload for blockUpdated Subscription
+type UpdateBlockPayload {
+  mutation: String!
+  id: Int
+  zverId: Int!
+  node: Block
+}
