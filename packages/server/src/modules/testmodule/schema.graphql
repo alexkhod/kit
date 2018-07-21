@@ -4,7 +4,7 @@ type Zver {
   inv: String!
   isWork: Boolean!
   blocks: [Block]
-  comments: [Comment]
+  comments: [Comments]
 }
 
 # Block
@@ -13,7 +13,7 @@ type Block {
   inv: String!
   isWork: Boolean!
   modules: [Module]
-  comments: [Comment]
+  comments: [Comments]
 }
 
 # Module
@@ -21,11 +21,11 @@ type Module {
   id: Int!
   inv: String!
   isWork: Boolean!
-  comments: [Comment]
+  comments: [Comments]
 }
 
-# Comment
-type Comment {
+# Comments
+type Comments {
   id: Int!
   content: String!
 }
@@ -46,7 +46,7 @@ type ZverPageInfo {
 type Zvers {
   totalCount: Int
   edges: [ZverEdges]
-  pageInfo: ZversPageInfo
+  pageInfo: ZverPageInfo
 }
 
 extend type Query {
