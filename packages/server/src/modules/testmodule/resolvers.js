@@ -1,24 +1,24 @@
 import { withFilter } from 'graphql-subscriptions';
 import { createBatchResolver } from 'graphql-resolve-batch';
 
-const POST_SUBSCRIPTION = 'post_subscription';
-const POSTS_SUBSCRIPTION = 'posts_subscription';
-const COMMENT_SUBSCRIPTION = 'comment_subscription';
+const ZVER_SUBSCRIPTION = 'zver_subscription';
+const ZVERS_SUBSCRIPTION = 'zvers_subscription';
+const BLOCK_SUBSCRIPTION = 'block_subscription';
 
 export default pubsub => ({
   Query: {
-    async posts(obj, { limit, after }, context) {
+    async zvers(obj, { limit, after }, context) {
       let edgesArray = [];
-      let posts = await context.Post.postsPagination(limit, after);
+      let zvers = await context.Zver.zversPagination(limit, after);
 
-      posts.map((post, index) => {
+      zvers.map((zver, index) => {
         edgesArray.push({
           cursor: after + index,
-          node: post
+          node: zver
         });
       });
       const endCursor = edgesArray.length > 0 ? edgesArray[edgesArray.length - 1].cursor : 0;
-      const total = (await context.Post.getTotal()).count;
+      const total = (await context.Zver.getTotal()).count;
       const hasNextPage = total > after + limit;
       return {
         totalCount: total,
@@ -29,145 +29,145 @@ export default pubsub => ({
         }
       };
     },
-    post(obj, { id }, context) {
-      return context.Post.post(id);
+    zver(obj, { id }, context) {
+      return context.Zver.zver(id);
     }
   },
-  Post: {
-    comments: createBatchResolver((sources, args, context) => {
-      return context.Post.getCommentsForPostIds(sources.map(({ id }) => id));
+  Zver: {
+    blocks: createBatchResolver((sources, args, context) => {
+      return context.Zver.getBlocksForZverIds(sources.map(({ id }) => id));
     })
   },
   Mutation: {
-    async addPost(obj, { input }, context) {
-      const [id] = await context.Post.addPost(input);
-      const post = await context.Post.post(id);
-      // publish for post list
-      pubsub.publish(POSTS_SUBSCRIPTION, {
-        postsUpdated: {
+    async addZver(obj, { input }, context) {
+      const [id] = await context.Zver.addZver(input);
+      const zver = await context.Zver.zver(id);
+      // publish for zver list
+      pubsub.publish(ZVERS_SUBSCRIPTION, {
+        zversUpdated: {
           mutation: 'CREATED',
           id,
-          node: post
+          node: zver
         }
       });
-      return post;
+      return zver;
     },
-    async deletePost(obj, { id }, context) {
-      const post = await context.Post.post(id);
-      const isDeleted = await context.Post.deletePost(id);
+    async deleteZver(obj, { id }, context) {
+      const zver = await context.Zver.zver(id);
+      const isDeleted = await context.Zver.deleteZver(id);
       if (isDeleted) {
-        // publish for post list
-        pubsub.publish(POSTS_SUBSCRIPTION, {
-          postsUpdated: {
+        // publish for zver list
+        pubsub.publish(ZVERS_SUBSCRIPTION, {
+          zversUpdated: {
             mutation: 'DELETED',
             id,
-            node: post
+            node: zver
           }
         });
-        // publish for edit post page
-        pubsub.publish(POST_SUBSCRIPTION, {
-          postUpdated: {
+        // publish for edit zver page
+        pubsub.publish(ZVER_SUBSCRIPTION, {
+          zverUpdated: {
             mutation: 'DELETED',
             id,
-            node: post
+            node: zver
           }
         });
-        return { id: post.id };
+        return { id: zver.id };
       } else {
         return { id: null };
       }
     },
-    async editPost(obj, { input }, context) {
-      await context.Post.editPost(input);
-      const post = await context.Post.post(input.id);
-      // publish for post list
-      pubsub.publish(POSTS_SUBSCRIPTION, {
-        postsUpdated: {
+    async editZver(obj, { input }, context) {
+      await context.Zver.editZver(input);
+      const zver = await context.Zver.zver(input.id);
+      // publish for zver list
+      pubsub.publish(ZVERS_SUBSCRIPTION, {
+        zversUpdated: {
           mutation: 'UPDATED',
-          id: post.id,
-          node: post
+          id: zver.id,
+          node: zver
         }
       });
-      // publish for edit post page
-      pubsub.publish(POST_SUBSCRIPTION, {
-        postUpdated: {
+      // publish for edit zver page
+      pubsub.publish(ZVER_SUBSCRIPTION, {
+        zverUpdated: {
           mutation: 'UPDATED',
-          id: post.id,
-          node: post
+          id: zver.id,
+          node: zver
         }
       });
-      return post;
+      return zver;
     },
-    async addComment(obj, { input }, context) {
-      const [id] = await context.Post.addComment(input);
-      const comment = await context.Post.getComment(id);
-      // publish for edit post page
-      pubsub.publish(COMMENT_SUBSCRIPTION, {
-        commentUpdated: {
+    async addBlock(obj, { input }, context) {
+      const [id] = await context.Zver.addBlock(input);
+      const block = await context.Zver.getBlock(id);
+      // publish for edit zver page
+      pubsub.publish(BLOCK_SUBSCRIPTION, {
+        blockUpdated: {
           mutation: 'CREATED',
-          id: comment.id,
-          postId: input.postId,
-          node: comment
+          id: block.id,
+          zverId: input.zverId,
+          node: block
         }
       });
-      return comment;
+      return block;
     },
-    async deleteComment(
+    async deleteBlock(
       obj,
       {
-        input: { id, postId }
+        input: { id, zverId }
       },
       context
     ) {
-      await context.Post.deleteComment(id);
-      // publish for edit post page
-      pubsub.publish(COMMENT_SUBSCRIPTION, {
-        commentUpdated: {
+      await context.Zver.deleteBlock(id);
+      // publish for edit zver page
+      pubsub.publish(BLOCK_SUBSCRIPTION, {
+        blockUpdated: {
           mutation: 'DELETED',
           id,
-          postId,
+          zverId,
           node: null
         }
       });
       return { id };
     },
-    async editComment(obj, { input }, context) {
-      await context.Post.editComment(input);
-      const comment = await context.Post.getComment(input.id);
-      // publish for edit post page
-      pubsub.publish(COMMENT_SUBSCRIPTION, {
-        commentUpdated: {
+    async editBlock(obj, { input }, context) {
+      await context.Zver.editBlock(input);
+      const block = await context.Zver.getBlock(input.id);
+      // publish for edit zver page
+      pubsub.publish(BLOCK_SUBSCRIPTION, {
+        blockUpdated: {
           mutation: 'UPDATED',
           id: input.id,
-          postId: input.postId,
-          node: comment
+          zverId: input.zverId,
+          node: block
         }
       });
-      return comment;
+      return block;
     }
   },
   Subscription: {
-    postUpdated: {
+    zverUpdated: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(POST_SUBSCRIPTION),
+        () => pubsub.asyncIterator(ZVER_SUBSCRIPTION),
         (payload, variables) => {
-          return payload.postUpdated.id === variables.id;
+          return payload.zverUpdated.id === variables.id;
         }
       )
     },
-    postsUpdated: {
+    zversUpdated: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(POSTS_SUBSCRIPTION),
+        () => pubsub.asyncIterator(ZVERS_SUBSCRIPTION),
         (payload, variables) => {
-          return variables.endCursor <= payload.postsUpdated.id;
+          return variables.endCursor <= payload.zversUpdated.id;
         }
       )
     },
-    commentUpdated: {
+    blockUpdated: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(COMMENT_SUBSCRIPTION),
+        () => pubsub.asyncIterator(BLOCK_SUBSCRIPTION),
         (payload, variables) => {
-          return payload.commentUpdated.postId === variables.postId;
+          return payload.blockUpdated.zverId === variables.zverId;
         }
       )
     }
