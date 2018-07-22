@@ -3,6 +3,8 @@ type Zver {
   id: Int!
   inv: String!
   isWork: Boolean!
+  created_at: String
+  updated_at: String
   blocks: [Block]
   comments: [Comments]
 }
@@ -12,6 +14,8 @@ type Block {
   id: Int!
   inv: String!
   isWork: Boolean!
+  created_at: String
+  updated_at: String
   modules: [Module]
   comments: [Comments]
 }
@@ -21,6 +25,8 @@ type Module {
   id: Int!
   inv: String!
   isWork: Boolean!
+  created_at: String
+  updated_at: String
   comments: [Comments]
 }
 
@@ -28,6 +34,8 @@ type Module {
 type Comments {
   id: Int!
   content: String!
+  created_at: String
+  updated_at: String
 }
 
 # Edges for Zvers
@@ -54,6 +62,12 @@ extend type Query {
   zvers(limit: Int, after: Int): Zvers
   # Zver
   zver(id: Int!): Zver
+  # Block
+  block(id: Int!): Block
+  # Module
+  module(id: Int!): Module
+  # Comments
+  comments(id: Int!): Comments
 }
 
 extend type Mutation {
@@ -69,6 +83,22 @@ extend type Mutation {
   deleteBlock(input: DeleteBlockInput!): Block
   # Edit a block
   editBlock(input: EditBlockInput!): Block
+  # Add module to block
+  addModule(input: AddModuleInput!): Module
+  # Delete a module
+  deleteModule(input: DeleteModuleInput!): Module
+  # Edit a module
+  editModule(input: EditModuleInput!): Module
+  # Add comments to zver
+  addCommentsOnZver(input: AddCommentsOnZverInput!): Comments
+  # Add comments to block
+  addCommentsOnBlock(input: AddCommentsOnBlockInput!): Comments
+  # Add comments to module
+  addCommentsOnModule(input: AddCommentsOnModuleInput!): Comments
+  # Delete a comments
+  deleteComments(input: DeleteCommentsInput!): Comments
+  # Edit a comments
+  editComments(input: EditCommentsInput!): Comments
 }
 
 # Input for addZver Mutation
@@ -106,6 +136,70 @@ input EditBlockInput {
   isWork: Boolean!
   # Needed for blockUpdated Subscription filter
   zverId: Int!
+}
+
+# Input for addModule Mutation
+input AddModuleInput {
+  inv: String!
+  isWork: Boolean!
+  # Needed for moduleUpdated Subscription filter
+  blockId: Int!
+}
+
+# Input for editModule Mutation
+input DeleteModuleInput {
+  id: Int!
+  # Needed for moduleUpdated Subscription filter
+  blockId: Int!
+}
+
+# Input for deleteModule Mutation
+input EditModuleInput {
+  id: Int!
+  inv: String!
+  isWork: Boolean!
+  # Needed for moduleUpdated Subscription filter
+  blockId: Int!
+}
+
+# Input for addCommentsOnZver Mutation
+input AddCommentsOnZverInput {
+  content: String!
+  # Needed for moduleUpdated Subscription filter
+  zverId: Int
+}
+
+# Input for AddCommentsOnBlock Mutation
+input AddCommentsOnBlockInput {
+  content: String!
+  # Needed for moduleUpdated Subscription filter
+  blockId: Int
+}
+
+# Input for AddCommentsOnModule Mutation
+input AddCommentsOnModuleInput {
+  content: String!
+  # Needed for moduleUpdated Subscription filter
+  moduleId: Int
+}
+
+# Input for editComments Mutation
+input DeleteCommentsInput {
+  id: Int!
+  # Needed for moduleUpdated Subscription filter
+  zverId: Int
+  blockId: Int
+  moduleId: Int
+}
+
+# Input for deleteComments Mutation
+input EditCommentsInput {
+  id: Int!
+  content: String!
+  # Needed for moduleUpdated Subscription filter
+  zverId: Int
+  blockId: Int
+  moduleId: Int
 }
 
 extend type Subscription {

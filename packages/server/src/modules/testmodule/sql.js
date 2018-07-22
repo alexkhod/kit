@@ -1,19 +1,19 @@
 import { returnId, orderedFor } from '../../sql/helpers';
 import knex from '../../sql/connector';
 
-export default class Testmodule {
+export default class Zver {
   zversPagination(limit, after) {
     return knex
-      .select('id', 'inv', 'isWork')
+      .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
       .from('zvers')
-      .orderBy('id', 'desc')
+      .orderBy('id', 'asc')
       .limit(limit)
       .offset(after);
   }
 
   async getBlocksForZverIds(zverIds) {
     const res = await knex
-      .select('id', 'inv', 'isWork', 'zver_id AS zverId')
+      .select('id', 'inv', 'isWork', 'created_at', 'updated_at', 'zver_id AS zverId')
       .from('blocks')
       .whereIn('zver_id', zverIds);
 
@@ -22,7 +22,7 @@ export default class Testmodule {
 
   async getModulesForBlockIds(blockIds) {
     const res = await knex
-      .select('id', 'inv', 'isWork', 'block_id AS blockId')
+      .select('id', 'inv', 'isWork', 'created_at', 'updated_at', 'block_id AS blockId')
       .from('modules')
       .whereIn('block_id', blockIds);
 
@@ -31,16 +31,16 @@ export default class Testmodule {
 
   async getCommentsForZverIds(zverIds) {
     const res = await knex
-      .select('id', 'content', 'zver_id AS zverId')
+      .select('id', 'content', 'created_at', 'updated_at', 'zver_id AS zverId')
       .from('comments')
       .whereIn('zver_id', zverIds);
 
-    return orderedFor(res, zverIds, 'blockId', false);
+    return orderedFor(res, zverIds, 'zverId', false);
   }
 
   async getCommentsForBlockIds(blockIds) {
     const res = await knex
-      .select('id', 'content', 'block_id AS blockId')
+      .select('id', 'content', 'created_at', 'updated_at', 'block_id AS blockId')
       .from('comments')
       .whereIn('block_id', blockIds);
 
@@ -49,11 +49,11 @@ export default class Testmodule {
 
   async getCommentsForModuleIds(moduleIds) {
     const res = await knex
-      .select('id', 'content', 'module_id AS moduleId')
+      .select('id', 'content', 'created_at', 'updated_at', 'module_id AS moduleId')
       .from('comments')
       .whereIn('module_id', moduleIds);
 
-    return orderedFor(res, moduleIds, 'blockId', false);
+    return orderedFor(res, moduleIds, 'moduleId', false);
   }
 
   getTotal() {
@@ -64,7 +64,7 @@ export default class Testmodule {
 
   zvers(id) {
     return knex
-      .select('id', 'inv', 'isWork')
+      .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
       .from('zvers')
       .where('id', '=', id)
       .first();
@@ -95,7 +95,7 @@ export default class Testmodule {
 
   getBlock(id) {
     return knex
-      .select('id', 'inv', 'isWork')
+      .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
       .from('blocks')
       .where('id', '=', id)
       .first();
@@ -122,7 +122,7 @@ export default class Testmodule {
 
   getModule(id) {
     return knex
-      .select('id', 'inv', 'isWork')
+      .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
       .from('modules')
       .where('id', '=', id)
       .first();
@@ -157,7 +157,7 @@ export default class Testmodule {
 
   getComments(id) {
     return knex
-      .select('id', 'content')
+      .select('id', 'content', 'created_at', 'updated_at')
       .from('comments')
       .where('id', '=', id)
       .first();

@@ -1,4 +1,4 @@
-import Testmodule from './sql';
+import Zver from './sql';
 import schema from './schema.graphql';
 import createResolvers from './resolvers';
 
@@ -7,5 +7,5 @@ import Feature from '../connector';
 export default new Feature({
   schema,
   createResolversFunc: createResolvers,
-  createContextFunc: () => ({ Testmodule: new Testmodule() })
+  createContextFunc: () => ({ Zver: new Zver() })
 });
