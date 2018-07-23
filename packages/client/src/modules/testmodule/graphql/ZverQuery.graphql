@@ -1,11 +1,11 @@
 #import "./Zver.graphql"
-#import "./Comments.graphql"
+#import "./Comment.graphql"
 
 query zver($id: Int!) {
   zver(id: $id) {
     ...ZverInfo
     comments {
-      ...CommentsInfo
+      ...CommentInfo
     }
   }
 }

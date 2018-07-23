@@ -66,7 +66,7 @@ class ZverList extends React.PureComponent {
         {
           title: t('list.column.title'),
           dataIndex: 'inv',
-          key: 'title',
+          key: 'inv',
           render: (text, record) => (
             <Link className="zver-link" to={`/zver/${record.id}`}>
               {text}

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, NavLink } from 'react-router-dom';
 import translate from '../../i18n';
+
 import { MenuItem } from '../../modules/common/components/web';
 import Zver from './containers/Zver';
-//import ZverEdit from './containers/ZverEdit';
+import ZverEdit from './containers/ZverEdit';
 //import ZverAdd from './containers/ZverAdd';
 import resources from './locales';
 import resolvers from './resolvers';
@@ -16,7 +17,7 @@ const NavLinkWithI18n = translate()(({ t }) => (
 ));
 
 export default new Feature({
-  route: [<Route exact path="/zvers" component={Zver} />],
+  route: [<Route exact path="/zvers" component={Zver} />, <Route path="/zver/:id" component={ZverEdit} />],
   navItem: (
     <MenuItem key="/zvers">
       <NavLinkWithI18n />

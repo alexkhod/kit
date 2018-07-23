@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-
 import ZverEditView from '../components/ZverEditView';
 
 import ZVER_QUERY from '../graphql/ZverQuery.graphql';

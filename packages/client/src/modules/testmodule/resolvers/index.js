@@ -1,39 +1,39 @@
-import COMMENTS_QUERY_CLIENT from '../graphql/CommentsQuery.client.graphql';
+import COMMENT_QUERY_CLIENT from '../graphql/CommentQuery.client.graphql';
 
-const TYPE_NAME = 'CommentsState';
-const TYPE_NAME_COMMENTS = 'Comments';
+const TYPE_NAME = 'CommentState';
+const TYPE_NAME_COMMENT = 'Comment';
 
 const defaults = {
-  comments: {
+  comment: {
     id: null,
     content: '',
-    __typename: TYPE_NAME_COMMENTS
+    __typename: TYPE_NAME_COMMENT
   },
   __typename: TYPE_NAME
 };
 
 const resolvers = {
   Query: {
-    commentsState: (_, args, { cache }) => {
+    commentState: (_, args, { cache }) => {
       const {
-        comments: { comments }
-      } = cache.readQuery({ query: COMMENTS_QUERY_CLIENT });
+        comment: { comment }
+      } = cache.readQuery({ query: COMMENT_QUERY_CLIENT });
       return {
-        comments: {
-          ...comments,
-          __typename: TYPE_NAME_COMMENTS
+        comment: {
+          ...comment,
+          __typename: TYPE_NAME_COMMENT
         },
         __typename: TYPE_NAME
       };
     }
   },
   Mutation: {
-    onCommentsSelect: async (_, { comments }, { cache }) => {
+    onCommentSelect: async (_, { comment }, { cache }) => {
       await cache.writeData({
         data: {
-          comments: {
-            ...comments,
-            __typename: TYPE_NAME_COMMENTS
+          comment: {
+            ...comment,
+            __typename: TYPE_NAME_COMMENT
           },
           __typename: TYPE_NAME
         }
