@@ -1,0 +1,57 @@
+{
+  "navLink": "Zvers",
+  "comments": {
+    "title": "Comments",
+    "label": {
+      "field": "Comment",
+      "add": "Add",
+      "edit": "Edit",
+      "comment": "comment"
+    },
+    "btn": {
+      "edit": "Edit",
+      "submit": "Save",
+      "del": "Delete"
+    },
+    "column": {
+      "content": "Content",
+      "actions": "Actions"
+    }
+  },
+
+  "zver": {
+    "title": "Edit zver",
+    "meta": "Edit zver example page",
+    "loadMsg": "Loading...",
+    "btn": {
+      "edit": "Edit",
+      "submit": "Save",
+      "del": "Delete",
+      "back": "Back"
+    },
+    "label": {
+      "edit": "Edit",
+      "create": "Create",
+      "zver": "Zver"
+    },
+    "field": {
+      "title": "Title",
+      "content": "Content"
+    }
+  },
+
+  "list": {
+    "title": "Zvers",
+    "meta": "List of all zvers example page",
+    "column": {
+      "title": "Title",
+      "actions": "Actions"
+    },
+    "btn": {
+      "add": "Add",
+      "del": "Delete",
+      "more": "Load more ..."
+    },
+    "subTitle": "Zver list"
+  }
+}

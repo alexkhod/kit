@@ -1,0 +1,4 @@
+fragment CommentsInfo on Comments {
+  id
+  content
+}

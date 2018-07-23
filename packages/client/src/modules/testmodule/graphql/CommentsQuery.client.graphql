@@ -1,0 +1,6 @@
+#import "./Comments.graphql"
+query commentsState {
+  comments @client {
+    ...CommentsInfo
+  }
+}
