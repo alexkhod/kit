@@ -1,0 +1,12 @@
+#import "./Comment.graphql"
+
+subscription onCommentUpdated($zverId: Int!) {
+  commentUpdated(zverId: $zverId) {
+    mutation
+    id
+    zverId
+    node {
+      ...CommentInfo
+    }
+  }
+}
