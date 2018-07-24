@@ -268,7 +268,7 @@ export default pubsub => ({
       },
       context
     ) {
-      await context.Zver.deleteModule(id);
+      await context.Zver.deleteNote(id);
       // publish for edit note page
       pubsub.publish(NOTE_SUBSCRIPTION, {
         noteUpdated: {
