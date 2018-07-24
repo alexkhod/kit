@@ -5,7 +5,7 @@ import translate from '../../i18n';
 import { MenuItem } from '../../modules/common/components/web';
 import Zver from './containers/Zver';
 import ZverEdit from './containers/ZverEdit';
-//import ZverAdd from './containers/ZverAdd';
+import ZverAdd from './containers/ZverAdd';
 import resources from './locales';
 import resolvers from './resolvers';
 import Feature from '../connector';
@@ -17,7 +17,11 @@ const NavLinkWithI18n = translate()(({ t }) => (
 ));
 
 export default new Feature({
-  route: [<Route exact path="/zvers" component={Zver} />, <Route path="/zver/:id" component={ZverEdit} />],
+  route: [
+    <Route exact path="/zvers" component={Zver} />,
+    <Route exact path="/zver/new" component={ZverAdd} />,
+    <Route path="/zver/:id" component={ZverEdit} />
+  ],
   navItem: (
     <MenuItem key="/zvers">
       <NavLinkWithI18n />

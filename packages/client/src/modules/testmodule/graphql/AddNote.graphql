@@ -1,7 +1,7 @@
 #import "./Note.graphql"
 
-mutation addNote($input: AddNoteInput!) {
-  addNote(input: $input) {
+mutation addNoteOnZver($input: AddNoteOnZverInput!) {
+  addNoteOnZver(input: $input) {
     ...NoteInfo
   }
 }

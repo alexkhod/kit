@@ -41,7 +41,7 @@ export default graphql(ADD_ZVER, {
               }
             }
           ) => {
-            return addZver(prev, addZver);
+            return AddZver(prev, addZver);
           }
         }
       });
