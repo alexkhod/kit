@@ -1,4 +1,4 @@
-import testmodule from './testmodule';
+import testmodule from './zver';
 import cookies from './cookies';
 import i18n from './i18n';
 import counter from './counter';
