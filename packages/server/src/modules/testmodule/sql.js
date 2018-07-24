@@ -5,7 +5,7 @@ export default class Zver {
   zversPagination(limit, after) {
     return knex
       .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
-      .from('zvers')
+      .from('zver')
       .orderBy('id', 'asc')
       .limit(limit)
       .offset(after);
@@ -14,7 +14,7 @@ export default class Zver {
   async getBlocksForZverIds(zverIds) {
     const res = await knex
       .select('id', 'inv', 'isWork', 'created_at', 'updated_at', 'zver_id AS zverId')
-      .from('blocks')
+      .from('block')
       .whereIn('zver_id', zverIds);
 
     return orderedFor(res, zverIds, 'zverId', false);
@@ -23,65 +23,65 @@ export default class Zver {
   async getModulesForBlockIds(blockIds) {
     const res = await knex
       .select('id', 'inv', 'isWork', 'created_at', 'updated_at', 'block_id AS blockId')
-      .from('modules')
+      .from('module')
       .whereIn('block_id', blockIds);
 
     return orderedFor(res, blockIds, 'blockId', false);
   }
 
-  async getCommentsForZverIds(zverIds) {
+  async getNotesForZverIds(zverIds) {
     const res = await knex
       .select('id', 'content', 'created_at', 'updated_at', 'zver_id AS zverId')
-      .from('comments')
+      .from('note')
       .whereIn('zver_id', zverIds);
 
     return orderedFor(res, zverIds, 'zverId', false);
   }
 
-  async getCommentsForBlockIds(blockIds) {
+  async getNotesForBlockIds(blockIds) {
     const res = await knex
       .select('id', 'content', 'created_at', 'updated_at', 'block_id AS blockId')
-      .from('comments')
+      .from('note')
       .whereIn('block_id', blockIds);
 
     return orderedFor(res, blockIds, 'blockId', false);
   }
 
-  async getCommentsForModuleIds(moduleIds) {
+  async getNotesForModuleIds(moduleIds) {
     const res = await knex
       .select('id', 'content', 'created_at', 'updated_at', 'module_id AS moduleId')
-      .from('comments')
+      .from('note')
       .whereIn('module_id', moduleIds);
 
     return orderedFor(res, moduleIds, 'moduleId', false);
   }
 
   getTotal() {
-    return knex('zvers')
+    return knex('zver')
       .countDistinct('id as count')
       .first();
   }
 
-  zvers(id) {
+  zver(id) {
     return knex
       .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
-      .from('zvers')
+      .from('zver')
       .where('id', '=', id)
       .first();
   }
 
   addZver({ inv, isWork }) {
-    return returnId(knex('zvers')).insert({ inv, isWork });
+    return returnId(knex('zver')).insert({ inv, isWork });
   }
 
   deleteZver(id) {
-    return knex('zvers')
+    return knex('zver')
       .where('id', '=', id)
       .del();
   }
 
   editZver({ id, inv, isWork }) {
-    return knex('zvers')
+    return knex('zver')
       .where('id', '=', id)
       .update({
         inv: inv,
@@ -90,25 +90,25 @@ export default class Zver {
   }
 
   addBlock({ inv, isWork, zverId }) {
-    return returnId(knex('blocks')).insert({ inv, isWork, zver_id: zverId });
+    return returnId(knex('block')).insert({ inv, isWork, zver_id: zverId });
   }
 
   getBlock(id) {
     return knex
       .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
-      .from('blocks')
+      .from('block')
       .where('id', '=', id)
       .first();
   }
 
   deleteBlock(id) {
-    return knex('blocks')
+    return knex('block')
       .where('id', '=', id)
       .del();
   }
 
   editBlock({ id, inv, isWork }) {
-    return knex('blocks')
+    return knex('block')
       .where('id', '=', id)
       .update({
         inv: inv,
@@ -117,25 +117,25 @@ export default class Zver {
   }
 
   addModule({ inv, isWork, blockId }) {
-    return returnId(knex('modules')).insert({ inv, isWork, block_id: blockId });
+    return returnId(knex('module')).insert({ inv, isWork, block_id: blockId });
   }
 
   getModule(id) {
     return knex
       .select('id', 'inv', 'isWork', 'created_at', 'updated_at')
-      .from('modules')
+      .from('module')
       .where('id', '=', id)
       .first();
   }
 
   deleteModule(id) {
-    return knex('modules')
+    return knex('module')
       .where('id', '=', id)
       .del();
   }
 
   editModule({ id, inv, isWork }) {
-    return knex('modules')
+    return knex('module')
       .where('id', '=', id)
       .update({
         inv: inv,
@@ -143,34 +143,34 @@ export default class Zver {
       });
   }
 
-  addCommentsOnZver({ content, zverId }) {
-    return returnId(knex('comments')).insert({ content, zver_id: zverId });
+  addNoteOnZver({ content, zverId }) {
+    return returnId(knex('note')).insert({ content, zver_id: zverId });
   }
 
-  addCommentsOnBlock({ content, blockId }) {
-    return returnId(knex('comments')).insert({ content, block_id: blockId });
+  addNoteOnBlock({ content, blockId }) {
+    return returnId(knex('note')).insert({ content, block_id: blockId });
   }
 
-  addCommentsOnModule({ content, moduleId }) {
-    return returnId(knex('comments')).insert({ content, module_id: moduleId });
+  addNoteOnModule({ content, moduleId }) {
+    return returnId(knex('note')).insert({ content, module_id: moduleId });
   }
 
-  getComments(id) {
+  getNote(id) {
     return knex
       .select('id', 'content', 'created_at', 'updated_at')
-      .from('comments')
+      .from('note')
       .where('id', '=', id)
       .first();
   }
 
-  deleteComments(id) {
-    return knex('comments')
+  deleteNote(id) {
+    return knex('note')
       .where('id', '=', id)
       .del();
   }
 
-  editComments({ id, content }) {
-    return knex('comments')
+  editNote({ id, content }) {
+    return knex('note')
       .where('id', '=', id)
       .update({
         content: content

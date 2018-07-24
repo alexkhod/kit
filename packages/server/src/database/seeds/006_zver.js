@@ -1,40 +1,40 @@
 import { returnId, truncateTables } from '../../sql/helpers';
 
 export async function seed(knex, Promise) {
-  await truncateTables(knex, Promise, ['zvers', 'blocks', 'modules', 'comments']);
+  await truncateTables(knex, Promise, ['zver', 'block', 'module', 'note']);
 
   await Promise.all(
     [...Array(3).keys()].map(async ii => {
-      const zvers = await returnId(knex('zvers')).insert({
+      const zver = await returnId(knex('zver')).insert({
         inv: `${ii + 1}`,
         isWork: true
       });
-      await returnId(knex('comments')).insert({
-        zver_id: `${zvers[0]}`,
+      await returnId(knex('note')).insert({
+        zver_id: `${zver[0]}`,
         content: 'Работает'
       });
 
       await Promise.all(
         [...Array(16).keys()].map(async jj => {
-          const blocks = await returnId(knex('blocks')).insert({
-            zver_id: zvers[0],
+          const block = await returnId(knex('block')).insert({
+            zver_id: zver[0],
             inv: `${ii + 1}-${jj + 1}`,
             isWork: true
           });
-          await returnId(knex('comments')).insert({
-            block_id: `${blocks[0]}`,
+          await returnId(knex('note')).insert({
+            block_id: `${block[0]}`,
             content: 'Работает'
           });
 
           await Promise.all(
             [...Array(3).keys()].map(async kk => {
-              const modules = await returnId(knex('modules')).insert({
-                block_id: blocks[0],
+              const module = await returnId(knex('module')).insert({
+                block_id: block[0],
                 inv: `${ii + 1}-${jj + 1}-${kk + 1}`,
                 isWork: true
               });
-              return returnId(knex('comments')).insert({
-                module_id: `${modules[0]}`,
+              return returnId(knex('note')).insert({
+                module_id: `${module[0]}`,
                 content: 'Работает'
               });
             })

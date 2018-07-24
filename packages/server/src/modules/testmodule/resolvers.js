@@ -5,7 +5,7 @@ const ZVER_SUBSCRIPTION = 'zver_subscription';
 const ZVERS_SUBSCRIPTION = 'zvers_subscription';
 const BLOCK_SUBSCRIPTION = 'block_subscription';
 const MODULE_SUBSCRIPTION = 'module_subscription';
-const COMMENTS_SUBSCRIPTION = 'comments_subscription';
+const NOTE_SUBSCRIPTION = 'note_subscription';
 
 export default pubsub => ({
   Query: {
@@ -32,7 +32,7 @@ export default pubsub => ({
       };
     },
     zver(obj, { id }, context) {
-      return context.Zver.zvers(id);
+      return context.Zver.zver(id);
     },
     block(obj, { id }, context) {
       return context.Zver.getBlock(id);
@@ -40,35 +40,35 @@ export default pubsub => ({
     module(obj, { id }, context) {
       return context.Zver.getModule(id);
     },
-    comments(obj, { id }, context) {
-      return context.Zver.getComments(id);
+    note(obj, { id }, context) {
+      return context.Zver.getNote(id);
     }
   },
   Zver: {
     blocks: createBatchResolver((sources, args, context) => {
       return context.Zver.getBlocksForZverIds(sources.map(({ id }) => id));
     }),
-    comments: createBatchResolver((sources, args, context) => {
-      return context.Zver.getCommentsForZverIds(sources.map(({ id }) => id));
+    notes: createBatchResolver((sources, args, context) => {
+      return context.Zver.getNotesForZverIds(sources.map(({ id }) => id));
     })
   },
   Block: {
     modules: createBatchResolver((sources, args, context) => {
       return context.Zver.getModulesForBlockIds(sources.map(({ id }) => id));
     }),
-    comments: createBatchResolver((sources, args, context) => {
-      return context.Zver.getCommentsForBlockIds(sources.map(({ id }) => id));
+    notes: createBatchResolver((sources, args, context) => {
+      return context.Zver.getNotesForBlockIds(sources.map(({ id }) => id));
     })
   },
   Module: {
-    comments: createBatchResolver((sources, args, context) => {
-      return context.Zver.getCommentsForModuleIds(sources.map(({ id }) => id));
+    notes: createBatchResolver((sources, args, context) => {
+      return context.Zver.getNotesForModuleIds(sources.map(({ id }) => id));
     })
   },
   Mutation: {
     async addZver(obj, { input }, context) {
       const [id] = await context.Zver.addZver(input);
-      const zver = await context.Zver.zvers(id);
+      const zver = await context.Zver.zver(id);
       // publish for zver list
       pubsub.publish(ZVERS_SUBSCRIPTION, {
         zversUpdated: {
@@ -219,49 +219,49 @@ export default pubsub => ({
       });
       return module;
     },
-    async addCommentsOnZver(obj, { input }, context) {
-      const [id] = await context.Zver.addCommentsOnZver(input);
-      const comments = await context.Zver.getComments(id);
-      // publish for edit comments page
-      pubsub.publish(COMMENTS_SUBSCRIPTION, {
-        commentsUpdated: {
+    async addNoteOnZver(obj, { input }, context) {
+      const [id] = await context.Zver.addNoteOnZver(input);
+      const note = await context.Zver.getNote(id);
+      // publish for edit note page
+      pubsub.publish(NOTE_SUBSCRIPTION, {
+        noteUpdated: {
           mutation: 'CREATED',
-          id: comments.id,
+          id: note.id,
           zverId: input.zverId,
-          node: comments
+          node: note
         }
       });
-      return comments;
+      return note;
     },
-    async addCommentsOnBlock(obj, { input }, context) {
-      const [id] = await context.Zver.addCommentsOnBlock(input);
-      const comments = await context.Zver.getComments(id);
-      // publish for edit comments page
-      pubsub.publish(COMMENTS_SUBSCRIPTION, {
-        commentsUpdated: {
+    async addNoteOnBlock(obj, { input }, context) {
+      const [id] = await context.Zver.addNoteOnBlock(input);
+      const note = await context.Zver.getNote(id);
+      // publish for edit note page
+      pubsub.publish(NOTE_SUBSCRIPTION, {
+        noteUpdated: {
           mutation: 'CREATED',
-          id: comments.id,
+          id: note.id,
           blockId: input.blockId,
-          node: comments
+          node: note
         }
       });
-      return comments;
+      return note;
     },
-    async addCommentsOnModule(obj, { input }, context) {
-      const [id] = await context.Zver.addCommentsOnModule(input);
-      const comments = await context.Zver.getComments(id);
-      // publish for edit comments page
-      pubsub.publish(COMMENTS_SUBSCRIPTION, {
-        commentsUpdated: {
+    async addNoteOnModule(obj, { input }, context) {
+      const [id] = await context.Zver.addNoteOnModule(input);
+      const note = await context.Zver.getNote(id);
+      // publish for edit note page
+      pubsub.publish(NOTE_SUBSCRIPTION, {
+        noteUpdated: {
           mutation: 'CREATED',
-          id: comments.id,
+          id: note.id,
           moduleId: input.moduleId,
-          node: comments
+          node: note
         }
       });
-      return comments;
+      return note;
     },
-    async deleteComments(
+    async deleteNote(
       obj,
       {
         input: { id }
@@ -269,9 +269,9 @@ export default pubsub => ({
       context
     ) {
       await context.Zver.deleteModule(id);
-      // publish for edit comments page
-      pubsub.publish(COMMENTS_SUBSCRIPTION, {
-        commentsUpdated: {
+      // publish for edit note page
+      pubsub.publish(NOTE_SUBSCRIPTION, {
+        noteUpdated: {
           mutation: 'DELETED',
           id,
           node: null
@@ -279,18 +279,18 @@ export default pubsub => ({
       });
       return { id };
     },
-    async editComments(obj, { input }, context) {
-      await context.Zver.editComments(input);
-      const comments = await context.Zver.getComments(input.id);
-      // publish for edit comments page
-      pubsub.publish(COMMENTS_SUBSCRIPTION, {
-        commentsUpdated: {
+    async editNote(obj, { input }, context) {
+      await context.Zver.editNote(input);
+      const note = await context.Zver.getNote(input.id);
+      // publish for edit note page
+      pubsub.publish(NOTE_SUBSCRIPTION, {
+        noteUpdated: {
           mutation: 'UPDATED',
           id: input.id,
-          node: comments
+          node: note
         }
       });
-      return comments;
+      return note;
     }
   },
   Subscription: {
@@ -315,6 +315,22 @@ export default pubsub => ({
         () => pubsub.asyncIterator(BLOCK_SUBSCRIPTION),
         (payload, variables) => {
           return payload.blockUpdated.zverId === variables.zverId;
+        }
+      )
+    },
+    moduleUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(MODULE_SUBSCRIPTION),
+        (payload, variables) => {
+          return payload.moduleUpdated.blockId === variables.blockId;
+        }
+      )
+    },
+    noteUpdated: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(NOTE_SUBSCRIPTION),
+        (payload, variables) => {
+          return payload.noteUpdated.zverId === variables.zverId;
         }
       )
     }

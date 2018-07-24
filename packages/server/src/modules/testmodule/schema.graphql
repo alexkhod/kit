@@ -6,7 +6,7 @@ type Zver {
   created_at: String
   updated_at: String
   blocks: [Block]
-  comments: [Comments]
+  notes: [Note]
 }
 
 # Block
@@ -17,7 +17,7 @@ type Block {
   created_at: String
   updated_at: String
   modules: [Module]
-  comments: [Comments]
+  notes: [Note]
 }
 
 # Module
@@ -27,11 +27,11 @@ type Module {
   isWork: Boolean!
   created_at: String
   updated_at: String
-  comments: [Comments]
+  notes: [Note]
 }
 
-# Comments
-type Comments {
+# Note
+type Note {
   id: Int!
   content: String!
   created_at: String
@@ -66,8 +66,8 @@ extend type Query {
   block(id: Int!): Block
   # Module
   module(id: Int!): Module
-  # Comments
-  comments(id: Int!): Comments
+  # Note
+  note(id: Int!): Note
 }
 
 extend type Mutation {
@@ -89,16 +89,16 @@ extend type Mutation {
   deleteModule(input: DeleteModuleInput!): Module
   # Edit a module
   editModule(input: EditModuleInput!): Module
-  # Add comments to zver
-  addCommentsOnZver(input: AddCommentsOnZverInput!): Comments
-  # Add comments to block
-  addCommentsOnBlock(input: AddCommentsOnBlockInput!): Comments
-  # Add comments to module
-  addCommentsOnModule(input: AddCommentsOnModuleInput!): Comments
-  # Delete a comments
-  deleteComments(input: DeleteCommentsInput!): Comments
-  # Edit a comments
-  editComments(input: EditCommentsInput!): Comments
+  # Add note to zver
+  addNoteOnZver(input: AddNoteOnZverInput!): Note
+  # Add note to block
+  addNoteOnBlock(input: AddNoteOnBlockInput!): Note
+  # Add note to module
+  addNoteOnModule(input: AddNoteOnModuleInput!): Note
+  # Delete a note
+  deleteNote(input: DeleteNoteInput!): Note
+  # Edit a note
+  editNote(input: EditNoteInput!): Note
 }
 
 # Input for addZver Mutation
@@ -162,29 +162,29 @@ input EditModuleInput {
   blockId: Int!
 }
 
-# Input for addCommentsOnZver Mutation
-input AddCommentsOnZverInput {
+# Input for addNoteOnZver Mutation
+input AddNoteOnZverInput {
   content: String!
   # Needed for moduleUpdated Subscription filter
   zverId: Int
 }
 
-# Input for AddCommentsOnBlock Mutation
-input AddCommentsOnBlockInput {
+# Input for AddNoteOnBlock Mutation
+input AddNoteOnBlockInput {
   content: String!
   # Needed for moduleUpdated Subscription filter
   blockId: Int
 }
 
-# Input for AddCommentsOnModule Mutation
-input AddCommentsOnModuleInput {
+# Input for AddNoteOnModule Mutation
+input AddNoteOnModuleInput {
   content: String!
   # Needed for moduleUpdated Subscription filter
   moduleId: Int
 }
 
-# Input for editComments Mutation
-input DeleteCommentsInput {
+# Input for editNote Mutation
+input DeleteNoteInput {
   id: Int!
   # Needed for moduleUpdated Subscription filter
   zverId: Int
@@ -192,8 +192,8 @@ input DeleteCommentsInput {
   moduleId: Int
 }
 
-# Input for deleteComments Mutation
-input EditCommentsInput {
+# Input for deleteNote Mutation
+input EditNoteInput {
   id: Int!
   content: String!
   # Needed for moduleUpdated Subscription filter
@@ -209,6 +209,10 @@ extend type Subscription {
   zversUpdated(endCursor: Int!): UpdateZverPayload
   # Subscription for blocks
   blockUpdated(zverId: Int!): UpdateBlockPayload
+  # Subscription for module
+  moduleUpdated(blockId: Int!): UpdateModulePayload
+  # Subscription for note
+  noteUpdated(zverId: Int!): UpdateNotePayload
 }
 
 # Payload for zversUpdated Subscription
@@ -224,4 +228,20 @@ type UpdateBlockPayload {
   id: Int
   zverId: Int!
   node: Block
+}
+
+# Payload for moduleUpdated Subscription
+type UpdateModulePayload {
+  mutation: String!
+  id: Int
+  blockId: Int!
+  node: Module
+}
+
+# Payload for noteUpdated Subscription
+type UpdateNotePayload {
+  mutation: String!
+  id: Int
+  zverId: Int!
+  node: Note
 }
