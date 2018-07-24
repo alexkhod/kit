@@ -1,39 +1,39 @@
-import COMMENT_QUERY_CLIENT from '../graphql/CommentQuery.client.graphql';
+import NOTE_QUERY_CLIENT from '../graphql/NoteQuery.client.graphql';
 
-const TYPE_NAME = 'CommentState';
-const TYPE_NAME_COMMENT = 'Comment';
+const TYPE_NAME = 'NoteState';
+const TYPE_NAME_NOTE = 'Note';
 
 const defaults = {
-  comment: {
+  note: {
     id: null,
     content: '',
-    __typename: TYPE_NAME_COMMENT
+    __typename: TYPE_NAME_NOTE
   },
   __typename: TYPE_NAME
 };
 
 const resolvers = {
   Query: {
-    commentState: (_, args, { cache }) => {
+    noteState: (_, args, { cache }) => {
       const {
-        comment: { comment }
-      } = cache.readQuery({ query: COMMENT_QUERY_CLIENT });
+        note: { note }
+      } = cache.readQuery({ query: NOTE_QUERY_CLIENT });
       return {
-        comment: {
-          ...comment,
-          __typename: TYPE_NAME_COMMENT
+        note: {
+          ...note,
+          __typename: TYPE_NAME_NOTE
         },
         __typename: TYPE_NAME
       };
     }
   },
   Mutation: {
-    onCommentSelect: async (_, { comment }, { cache }) => {
+    onNoteSelect: async (_, { note }, { cache }) => {
       await cache.writeData({
         data: {
-          comment: {
-            ...comment,
-            __typename: TYPE_NAME_COMMENT
+          note: {
+            ...note,
+            __typename: TYPE_NAME_NOTE
           },
           __typename: TYPE_NAME
         }

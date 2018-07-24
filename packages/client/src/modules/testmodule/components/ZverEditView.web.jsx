@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import ZverForm from './ZverForm';
-import ZverComments from '../containers/ZverComments';
+import ZverNotes from '../containers/ZverNotes';
 import settings from '../../../../../../settings';
 
 const onSubmit = (zver, editZver) => values => {
@@ -52,11 +52,7 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
         <ZverForm onSubmit={onSubmit(zverObj, editZver)} zver={zver} />
         <br />
         {zverObj && (
-          <ZverComments
-            zverId={Number(match.params.id)}
-            comments={zverObj.comments}
-            subscribeToMore={subscribeToMore}
-          />
+          <ZverNotes zverId={Number(match.params.id)} notes={zverObj.notes} subscribeToMore={subscribeToMore} />
         )}
       </PageLayout>
     );

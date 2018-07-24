@@ -1,11 +1,11 @@
 #import "./Zver.graphql"
-#import "./Comment.graphql"
+#import "./Note.graphql"
 
 mutation addZver($input: AddZverInput!) {
   addZver(input: $input) {
     ...ZverInfo
-    comments {
-      ...CommentInfo
+    notes {
+      ...NoteInfo
     }
   }
 }

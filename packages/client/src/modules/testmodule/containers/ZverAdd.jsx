@@ -29,7 +29,7 @@ export default graphql(ADD_ZVER, {
             id: null,
             title: title,
             content: content,
-            comments: []
+            notes: []
           }
         },
         updateQueries: {

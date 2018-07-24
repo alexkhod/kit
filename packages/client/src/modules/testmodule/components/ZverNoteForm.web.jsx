@@ -7,19 +7,19 @@ import Field from '../../../utils/FieldAdapter';
 import { Form, RenderField, Row, Col, Label, Button } from '../../common/components/web';
 import { required, validateForm } from '../../../../../common/validation';
 
-const commentFormSchema = {
+const noteFormSchema = {
   content: [required]
 };
 
-const validate = values => validateForm(values, commentFormSchema);
+const validate = values => validateForm(values, noteFormSchema);
 
-const ZverCommentsForm = ({ values, handleSubmit, comment, t }) => {
+const ZverNoteForm = ({ values, handleSubmit, note, t }) => {
   return (
-    <Form name="comment" onSubmit={handleSubmit}>
+    <Form name="note" onSubmit={handleSubmit}>
       <Row>
         <Col xs={2}>
           <Label>
-            {t(`comment.label.${comment.id ? 'edit' : 'add'}`)} {t('comment.label.comment')}
+            {t(`notes.label.${note.id ? 'edit' : 'add'}`)} {t('notes.label.note')}
           </Label>
         </Col>
         <Col xs={8}>
@@ -28,12 +28,12 @@ const ZverCommentsForm = ({ values, handleSubmit, comment, t }) => {
             component={RenderField}
             type="text"
             value={values.content}
-            placeholder={t('comment.label.field')}
+            placeholder={t('notes.label.field')}
           />
         </Col>
         <Col xs={2}>
           <Button color="primary" type="submit" className="float-right">
-            {t('comment.btn.submit')}
+            {t('notes.btn.submit')}
           </Button>
         </Col>
       </Row>
@@ -41,9 +41,9 @@ const ZverCommentsForm = ({ values, handleSubmit, comment, t }) => {
   );
 };
 
-ZverCommentsForm.propTypes = {
+ZverNoteForm.propTypes = {
   handleSubmit: PropTypes.func,
-  comment: PropTypes.object,
+  note: PropTypes.object,
   onSubmit: PropTypes.func,
   submitting: PropTypes.bool,
   values: PropTypes.object,
@@ -52,8 +52,8 @@ ZverCommentsForm.propTypes = {
   t: PropTypes.func
 };
 
-const ZverCommentFormWithFormik = withFormik({
-  mapPropsToValues: props => ({ content: props.comment && props.comment.content }),
+const ZverNoteFormWithFormik = withFormik({
+  mapPropsToValues: props => ({ content: props.note && props.note.content }),
   async handleSubmit(
     values,
     {
@@ -65,8 +65,8 @@ const ZverCommentFormWithFormik = withFormik({
     resetForm({ content: '' });
   },
   validate: values => validate(values),
-  displayName: 'CommentForm', // helps with React DevTools,
+  displayName: 'NoteForm', // helps with React DevTools,
   enableReinitialize: true
 });
 
-export default translate('zver')(ZverCommentFormWithFormik(ZverCommentsForm));
+export default translate('zver')(ZverNoteFormWithFormik(ZverNoteForm));

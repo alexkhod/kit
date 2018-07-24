@@ -3,33 +3,33 @@ import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
 
-import ZverCommentsView from '../components/ZverCommentsView';
+import ZverNotesView from '../components/ZverNotesView';
 
-import ADD_COMMENT from '../graphql/AddComment.graphql';
-import EDIT_COMMENT from '../graphql/EditComment.graphql';
-import DELETE_COMMENT from '../graphql/DeleteComment.graphql';
-import COMMENT_SUBSCRIPTION from '../graphql/CommentSubscription.graphql';
-import ADD_COMMENT_CLIENT from '../graphql/AddComment.client.graphql';
-import COMMENT_QUERY_CLIENT from '../graphql/CommentQuery.client.graphql';
+import ADD_NOTE from '../graphql/AddNote.graphql';
+import EDIT_NOTE from '../graphql/EditNote.graphql';
+import DELETE_NOTE from '../graphql/DeleteNote.graphql';
+import NOTE_SUBSCRIPTION from '../graphql/NoteSubscription.graphql';
+import ADD_NOTE_CLIENT from '../graphql/AddNote.client.graphql';
+import NOTE_QUERY_CLIENT from '../graphql/NoteQuery.client.graphql';
 
-function AddComment(prev, node) {
+function AddNote(prev, node) {
   // ignore if duplicate
-  if (prev.zver.comments.some(comment => comment.id === node.id)) {
+  if (prev.zver.notes.some(note => note.id === node.id)) {
     return prev;
   }
 
-  const filteredComments = prev.zver.comments.filter(comment => comment.id);
+  const filteredNotes = prev.zver.notes.filter(note => note.id);
   return update(prev, {
     zver: {
-      comments: {
-        $set: [...filteredComments, node]
+      notes: {
+        $set: [...filteredNotes, node]
       }
     }
   });
 }
 
-function DeleteComment(prev, id) {
-  const index = prev.zver.comments.findIndex(x => x.id === id);
+function DeleteNote(prev, id) {
+  const index = prev.zver.notes.findIndex(x => x.id === id);
 
   // ignore if not found
   if (index < 0) {
@@ -38,19 +38,19 @@ function DeleteComment(prev, id) {
 
   return update(prev, {
     zver: {
-      comments: {
+      notes: {
         $splice: [[index, 1]]
       }
     }
   });
 }
 
-class ZverComments extends React.Component {
+class ZverNotes extends React.Component {
   static propTypes = {
     zverId: PropTypes.number.isRequired,
-    comments: PropTypes.array.isRequired,
-    comment: PropTypes.object.isRequired,
-    onCommentSelect: PropTypes.func.isRequired,
+    notes: PropTypes.array.isRequired,
+    note: PropTypes.object.isRequired,
+    onNoteSelect: PropTypes.func.isRequired,
     subscribeToMore: PropTypes.func.isRequired
   };
 
@@ -60,7 +60,7 @@ class ZverComments extends React.Component {
   }
 
   componentDidMount() {
-    this.initCommentListSubscription();
+    this.initNoteListSubscription();
   }
 
   componentDidUpdate(prevProps) {
@@ -70,11 +70,11 @@ class ZverComments extends React.Component {
       this.subscription();
       this.subscription = null;
     }
-    this.initCommentListSubscription();
+    this.initNoteListSubscription();
   }
 
   componentWillUnmount() {
-    this.props.onCommentSelect({ id: null, content: '' });
+    this.props.onNoteSelect({ id: null, content: '' });
 
     if (this.subscription) {
       // unsubscribe
@@ -83,24 +83,24 @@ class ZverComments extends React.Component {
     }
   }
 
-  initCommentListSubscription() {
+  initNoteListSubscription() {
     if (!this.subscription) {
-      this.subscribeToCommentList(this.props.zverId);
+      this.subscribeToNoteList(this.props.zverId);
     }
   }
 
-  subscribeToCommentList = zverId => {
+  subscribeToNoteList = zverId => {
     const { subscribeToMore } = this.props;
 
     this.subscription = subscribeToMore({
-      document: COMMENT_SUBSCRIPTION,
+      document: NOTE_SUBSCRIPTION,
       variables: { zverId },
       updateQuery: (
         prev,
         {
           subscriptionData: {
             data: {
-              commentUpdated: { mutation, id, node }
+              noteUpdated: { mutation, id, node }
             }
           }
         }
@@ -108,9 +108,9 @@ class ZverComments extends React.Component {
         let newResult = prev;
 
         if (mutation === 'CREATED') {
-          newResult = AddComment(prev, node);
+          newResult = AddNote(prev, node);
         } else if (mutation === 'DELETED') {
-          newResult = DeleteComment(prev, id);
+          newResult = DeleteNote(prev, id);
         }
 
         return newResult;
@@ -119,20 +119,20 @@ class ZverComments extends React.Component {
   };
 
   render() {
-    return <ZverCommentsView {...this.props} />;
+    return <ZverNotesView {...this.props} />;
   }
 }
 
-const ZverCommentsWithApollo = compose(
-  graphql(ADD_COMMENT, {
+const ZverNotesWithApollo = compose(
+  graphql(ADD_NOTE, {
     props: ({ mutate }) => ({
-      addComment: (content, zverId) =>
+      addNote: (content, zverId) =>
         mutate({
           variables: { input: { content, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            addComment: {
-              __typename: 'Comment',
+            addNote: {
+              __typename: 'Note',
               id: null,
               content: content
             }
@@ -142,27 +142,27 @@ const ZverCommentsWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { addComment }
+                  data: { addNote }
                 }
               }
             ) => {
               if (prev.zver) {
-                return AddComment(prev, addComment);
+                return AddNote(prev, addNote);
               }
             }
           }
         })
     })
   }),
-  graphql(EDIT_COMMENT, {
+  graphql(EDIT_NOTE, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      editComment: (id, content) =>
+      editNote: (id, content) =>
         mutate({
           variables: { input: { id, zverId, content } },
           optimisticResponse: {
             __typename: 'Mutation',
-            editComment: {
-              __typename: 'Comment',
+            editNote: {
+              __typename: 'Note',
               id: id,
               content: content
             }
@@ -170,15 +170,15 @@ const ZverCommentsWithApollo = compose(
         })
     })
   }),
-  graphql(DELETE_COMMENT, {
+  graphql(DELETE_NOTE, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      deleteComment: id =>
+      deleteNote: id =>
         mutate({
           variables: { input: { id, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            deleteComment: {
-              __typename: 'Comment',
+            deleteNote: {
+              __typename: 'Note',
               id: id
             }
           },
@@ -187,28 +187,28 @@ const ZverCommentsWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { deleteComment }
+                  data: { deleteNote }
                 }
               }
             ) => {
               if (prev.zver) {
-                return DeleteComment(prev, deleteComment.id);
+                return DeleteNote(prev, deleteNote.id);
               }
             }
           }
         })
     })
   }),
-  graphql(ADD_COMMENT_CLIENT, {
+  graphql(ADD_NOTE_CLIENT, {
     props: ({ mutate }) => ({
-      onCommentSelect: comment => {
-        mutate({ variables: { comment: comment } });
+      onNoteSelect: note => {
+        mutate({ variables: { note: note } });
       }
     })
   }),
-  graphql(COMMENT_QUERY_CLIENT, {
-    props: ({ data: { comment } }) => ({ comment })
+  graphql(NOTE_QUERY_CLIENT, {
+    props: ({ data: { note } }) => ({ note })
   })
-)(ZverComments);
+)(ZverNotes);
 
-export default ZverCommentsWithApollo;
+export default ZverNotesWithApollo;
