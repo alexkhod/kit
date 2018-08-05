@@ -333,6 +333,22 @@ export default pubsub => ({
           return payload.noteUpdated.zverId === variables.zverId;
         }
       )
+    },
+    noteUpdatedOnBlock: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(NOTE_SUBSCRIPTION),
+        (payload, variables) => {
+          return payload.noteUpdatedOnBlock.blockId === variables.blockId;
+        }
+      )
+    },
+    noteUpdatedOnModule: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(NOTE_SUBSCRIPTION),
+        (payload, variables) => {
+          return payload.noteUpdatedOnModule.moduleId === variables.moduleId;
+        }
+      )
     }
   }
 });

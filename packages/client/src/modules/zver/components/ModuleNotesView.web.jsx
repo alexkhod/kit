@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
-import ZverNoteForm from './ZverNoteForm';
+import ModuleNoteForm from './ModuleNoteForm';
 
-class ZverNotesView extends React.PureComponent {
+class ModuleNotesView extends React.PureComponent {
   static propTypes = {
-    zverId: PropTypes.number.isRequired,
+    moduleId: PropTypes.number.isRequired,
     notes: PropTypes.array.isRequired,
-    blocks: PropTypes.array.isRequired,
     note: PropTypes.object,
     addNote: PropTypes.func.isRequired,
     editNote: PropTypes.func.isRequired,
@@ -36,10 +34,10 @@ class ZverNotesView extends React.PureComponent {
   };
 
   onSubmit = () => values => {
-    const { note, zverId, addNote, editNote, onNoteSelect } = this.props;
+    const { note, moduleId, addNote, editNote, onNoteSelect } = this.props;
 
     if (note.id === null) {
-      addNote(values.content, zverId);
+      addNote(values.content, moduleId);
     } else {
       editNote(note.id, values.content);
     }
@@ -48,7 +46,7 @@ class ZverNotesView extends React.PureComponent {
   };
 
   render() {
-    const { zverId, notes, blocks, note, t } = this.props;
+    const { moduleId, notes, note, t } = this.props;
     const columns = [
       {
         title: t('notes.column.content'),
@@ -76,52 +74,18 @@ class ZverNotesView extends React.PureComponent {
         )
       }
     ];
-    const blockscolumns = [
-      {
-        title: t('blocks.column.content'),
-        dataIndex: 'inv',
-        key: 'inv',
-        render: (text, record) => (
-          <Link className="zver-link" to={`/block/${record.id}`}>
-            {text}
-          </Link>
-        )
-      },
-      {
-        title: t('blocks.column.actions'),
-        key: 'actions',
-        width: 120,
-        render: (text, record) => (
-          <div style={{ width: 120 }}>
-            <Button
-              color="primary"
-              size="sm"
-              className="edit-note"
-              onClick={() => this.handleEditNote(record.id, record.content)}
-            >
-              {t('notes.btn.edit')}
-            </Button>{' '}
-            <Button color="primary" size="sm" className="delete-note" onClick={() => this.handleDeleteNote(record.id)}>
-              {t('notes.btn.del')}
-            </Button>
-          </div>
-        )
-      }
-    ];
+
     //console.log(notes);
 
     return (
       <div>
         <h3>{t('notes.title')}</h3>
-        <ZverNoteForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
+        <ModuleNoteForm moduleId={moduleId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
         <h1 />
         <Table dataSource={notes} columns={columns} />
-        <h3>{t('blocks.title')}</h3>
-        <ZverNoteForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
-        <Table dataSource={blocks} columns={blockscolumns} />
       </div>
     );
   }
 }
 
-export default translate('zver')(ZverNotesView);
+export default translate('zver')(ModuleNotesView);

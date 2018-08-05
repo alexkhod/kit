@@ -213,6 +213,8 @@ extend type Subscription {
   moduleUpdated(blockId: Int!): UpdateModulePayload
   # Subscription for note
   noteUpdated(zverId: Int!): UpdateNotePayload
+  noteUpdatedOnBlock(blockId: Int!): UpdateNotePayloadOnBlock
+  noteUpdatedOnModule(moduleId: Int!): UpdateNotePayloadOnModule
 }
 
 # Payload for zversUpdated Subscription
@@ -243,5 +245,19 @@ type UpdateNotePayload {
   mutation: String!
   id: Int
   zverId: Int!
+  node: Note
+}
+
+type UpdateNotePayloadOnBlock {
+  mutation: String!
+  id: Int
+  blockId: Int!
+  node: Note
+}
+
+type UpdateNotePayloadOnModule {
+  mutation: String!
+  id: Int
+  moduleId: Int!
   node: Note
 }

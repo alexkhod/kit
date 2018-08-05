@@ -5,6 +5,8 @@ import translate from '../../i18n';
 import { MenuItem } from '../../modules/common/components/web';
 import Zver from './containers/Zver';
 import ZverEdit from './containers/ZverEdit';
+import BlockEdit from './containers/BlockEdit';
+import ModuleEdit from './containers/ModuleEdit';
 import ZverAdd from './containers/ZverAdd';
 import resources from './locales';
 import resolvers from './resolvers';
@@ -20,7 +22,9 @@ export default new Feature({
   route: [
     <Route exact path="/zvers" component={Zver} />,
     <Route exact path="/zver/new" component={ZverAdd} />,
-    <Route path="/zver/:id" component={ZverEdit} />
+    <Route path="/zver/:id" component={ZverEdit} />,
+    <Route path="/block/:id" component={BlockEdit} />,
+    <Route path="/module/:id" component={ModuleEdit} />
   ],
   navItem: (
     <MenuItem key="/zvers">

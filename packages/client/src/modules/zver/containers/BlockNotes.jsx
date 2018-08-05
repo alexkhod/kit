@@ -3,24 +3,24 @@ import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
 
-import ZverNotesView from '../components/ZverNotesView';
+import BlockNotesView from '../components/BlockNotesView';
 
-import ADD_NOTE_ON_ZVER from '../graphql/AddNoteOnZver.graphql';
+import ADD_NOTE_ON_BLOCK from '../graphql/AddNoteOnBlock.graphql';
 import EDIT_NOTE from '../graphql/EditNote.graphql';
 import DELETE_NOTE from '../graphql/DeleteNote.graphql';
-import NOTE_SUBSCRIPTION from '../graphql/NoteSubscription.graphql';
+import NOTE_SUBSCRIPTION_ON_BLOCK from '../graphql/NoteSubscriptionOnBlock.graphql';
 import ADD_NOTE_CLIENT from '../graphql/AddNote.client.graphql';
 import NOTE_QUERY_CLIENT from '../graphql/NoteQuery.client.graphql';
 
 function AddNote(prev, node) {
   // ignore if duplicate
-  if (prev.zver.notes.some(note => note.id === node.id)) {
+  if (prev.block.notes.some(note => note.id === node.id)) {
     return prev;
   }
 
-  const filteredNotes = prev.zver.notes.filter(note => note.id);
+  const filteredNotes = prev.block.notes.filter(note => note.id);
   return update(prev, {
-    zver: {
+    block: {
       notes: {
         $set: [...filteredNotes, node]
       }
@@ -29,7 +29,7 @@ function AddNote(prev, node) {
 }
 
 function DeleteNote(prev, id) {
-  const index = prev.zver.notes.findIndex(x => x.id === id);
+  const index = prev.block.notes.findIndex(x => x.id === id);
 
   // ignore if not found
   if (index < 0) {
@@ -37,7 +37,7 @@ function DeleteNote(prev, id) {
   }
 
   return update(prev, {
-    zver: {
+    block: {
       notes: {
         $splice: [[index, 1]]
       }
@@ -45,11 +45,11 @@ function DeleteNote(prev, id) {
   });
 }
 
-class ZverNotes extends React.Component {
+class BlockNotes extends React.Component {
   static propTypes = {
-    zverId: PropTypes.number.isRequired,
+    blockId: PropTypes.number.isRequired,
     notes: PropTypes.array.isRequired,
-    blocks: PropTypes.array.isRequired,
+    modules: PropTypes.array.isRequired,
     note: PropTypes.object.isRequired,
     onNoteSelect: PropTypes.func.isRequired,
     subscribeToMore: PropTypes.func.isRequired
@@ -65,9 +65,9 @@ class ZverNotes extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    let prevZverId = prevProps.zverId || null;
+    let prevBlockId = prevProps.blockId || null;
     // Check if props have changed and, if necessary, stop the subscription
-    if (this.subscription && this.props.zverId !== prevZverId) {
+    if (this.subscription && this.props.blockId !== prevBlockId) {
       this.subscription();
       this.subscription = null;
     }
@@ -86,16 +86,16 @@ class ZverNotes extends React.Component {
 
   initNoteListSubscription() {
     if (!this.subscription) {
-      this.subscribeToNoteList(this.props.zverId);
+      this.subscribeToNoteList(this.props.blockId);
     }
   }
 
-  subscribeToNoteList = zverId => {
+  subscribeToNoteList = blockId => {
     const { subscribeToMore } = this.props;
 
     this.subscription = subscribeToMore({
-      document: NOTE_SUBSCRIPTION,
-      variables: { zverId },
+      document: NOTE_SUBSCRIPTION_ON_BLOCK,
+      variables: { blockId },
       updateQuery: (
         prev,
         {
@@ -120,35 +120,35 @@ class ZverNotes extends React.Component {
   };
 
   render() {
-    return <ZverNotesView {...this.props} />;
+    return <BlockNotesView {...this.props} />;
   }
 }
 
-const ZverNotesWithApollo = compose(
-  graphql(ADD_NOTE_ON_ZVER, {
+const BlockNotesWithApollo = compose(
+  graphql(ADD_NOTE_ON_BLOCK, {
     props: ({ mutate }) => ({
-      addNote: (content, zverId) =>
+      addNote: (content, blockId) =>
         mutate({
-          variables: { input: { content, zverId } },
+          variables: { input: { content, blockId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            addNote: {
+            addNoteOnBlock: {
               __typename: 'Note',
               id: null,
               content: content
             }
           },
           updateQueries: {
-            zver: (
+            block: (
               prev,
               {
                 mutationResult: {
-                  data: { addNote }
+                  data: { addNoteOnBlock }
                 }
               }
             ) => {
-              if (prev.zver) {
-                return AddNote(prev, addNote);
+              if (prev.block) {
+                return AddNote(prev, addNoteOnBlock);
               }
             }
           }
@@ -156,10 +156,10 @@ const ZverNotesWithApollo = compose(
     })
   }),
   graphql(EDIT_NOTE, {
-    props: ({ ownProps: { zverId }, mutate }) => ({
+    props: ({ ownProps: { blockId }, mutate }) => ({
       editNote: (id, content) =>
         mutate({
-          variables: { input: { id, zverId, content } },
+          variables: { input: { id, blockId, content } },
           optimisticResponse: {
             __typename: 'Mutation',
             editNote: {
@@ -172,10 +172,10 @@ const ZverNotesWithApollo = compose(
     })
   }),
   graphql(DELETE_NOTE, {
-    props: ({ ownProps: { zverId }, mutate }) => ({
+    props: ({ ownProps: { blockId }, mutate }) => ({
       deleteNote: id =>
         mutate({
-          variables: { input: { id, zverId } },
+          variables: { input: { id, blockId } },
           optimisticResponse: {
             __typename: 'Mutation',
             deleteNote: {
@@ -184,7 +184,7 @@ const ZverNotesWithApollo = compose(
             }
           },
           updateQueries: {
-            zver: (
+            block: (
               prev,
               {
                 mutationResult: {
@@ -192,7 +192,7 @@ const ZverNotesWithApollo = compose(
                 }
               }
             ) => {
-              if (prev.zver) {
+              if (prev.block) {
                 return DeleteNote(prev, deleteNote.id);
               }
             }
@@ -210,6 +210,6 @@ const ZverNotesWithApollo = compose(
   graphql(NOTE_QUERY_CLIENT, {
     props: ({ data: { note } }) => ({ note })
   })
-)(ZverNotes);
+)(BlockNotes);
 
-export default ZverNotesWithApollo;
+export default BlockNotesWithApollo;

@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
-import ZverNoteForm from './ZverNoteForm';
+import BlockNoteForm from './BlockNoteForm';
 
-class ZverNotesView extends React.PureComponent {
+class BlockNotesView extends React.PureComponent {
   static propTypes = {
-    zverId: PropTypes.number.isRequired,
+    blockId: PropTypes.number.isRequired,
     notes: PropTypes.array.isRequired,
-    blocks: PropTypes.array.isRequired,
+    modules: PropTypes.array.isRequired,
     note: PropTypes.object,
     addNote: PropTypes.func.isRequired,
     editNote: PropTypes.func.isRequired,
@@ -36,10 +36,10 @@ class ZverNotesView extends React.PureComponent {
   };
 
   onSubmit = () => values => {
-    const { note, zverId, addNote, editNote, onNoteSelect } = this.props;
+    const { note, blockId, addNote, editNote, onNoteSelect } = this.props;
 
     if (note.id === null) {
-      addNote(values.content, zverId);
+      addNote(values.content, blockId);
     } else {
       editNote(note.id, values.content);
     }
@@ -48,7 +48,7 @@ class ZverNotesView extends React.PureComponent {
   };
 
   render() {
-    const { zverId, notes, blocks, note, t } = this.props;
+    const { blockId, notes, modules, note, t } = this.props;
     const columns = [
       {
         title: t('notes.column.content'),
@@ -76,19 +76,19 @@ class ZverNotesView extends React.PureComponent {
         )
       }
     ];
-    const blockscolumns = [
+    const modulescolumns = [
       {
-        title: t('blocks.column.content'),
+        title: t('modules.column.content'),
         dataIndex: 'inv',
         key: 'inv',
         render: (text, record) => (
-          <Link className="zver-link" to={`/block/${record.id}`}>
+          <Link className="zver-link" to={`/module/${record.id}`}>
             {text}
           </Link>
         )
       },
       {
-        title: t('blocks.column.actions'),
+        title: t('modules.column.actions'),
         key: 'actions',
         width: 120,
         render: (text, record) => (
@@ -113,15 +113,15 @@ class ZverNotesView extends React.PureComponent {
     return (
       <div>
         <h3>{t('notes.title')}</h3>
-        <ZverNoteForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
+        <BlockNoteForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
         <h1 />
         <Table dataSource={notes} columns={columns} />
-        <h3>{t('blocks.title')}</h3>
-        <ZverNoteForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
-        <Table dataSource={blocks} columns={blockscolumns} />
+        <h3>{t('modules.title')}</h3>
+        <BlockNoteForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
+        <Table dataSource={modules} columns={modulescolumns} />
       </div>
     );
   }
 }
 
-export default translate('zver')(ZverNotesView);
+export default translate('zver')(BlockNotesView);

@@ -52,7 +52,12 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
         <ZverForm onSubmit={onSubmit(zverObj, editZver)} zver={zver} />
         <br />
         {zverObj && (
-          <ZverNotes zverId={Number(match.params.id)} notes={zverObj.notes} subscribeToMore={subscribeToMore} />
+          <ZverNotes
+            zverId={Number(match.params.id)}
+            notes={zverObj.notes}
+            blocks={zverObj.blocks}
+            subscribeToMore={subscribeToMore}
+          />
         )}
       </PageLayout>
     );

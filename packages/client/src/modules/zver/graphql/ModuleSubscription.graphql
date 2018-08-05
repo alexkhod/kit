@@ -1,0 +1,11 @@
+#import "./Module.graphql"
+
+subscription onModuleUpdated($id: Int!) {
+  moduleUpdated(id: $id) {
+    mutation
+    id
+    node {
+      ...ModuleInfo
+    }
+  }
+}
