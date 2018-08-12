@@ -4,12 +4,11 @@ import { withFormik } from 'formik';
 
 import translate from '../../../i18n';
 import Field from '../../../utils/FieldAdapter';
-import { Form, RenderField, Button } from '../../common/components/web';
+import { Form, RenderField, RenderCheckBox, Button } from '../../common/components/web';
 import { required, validateForm } from '../../../../../common/validation';
 
 const moduleFormSchema = {
-  inv: [required],
-  content: [required]
+  inv: [required]
 };
 
 const validate = values => validateForm(values, moduleFormSchema);
@@ -19,11 +18,11 @@ const ModuleForm = ({ values, handleSubmit, submitting, t }) => {
     <Form name="module" onSubmit={handleSubmit}>
       <Field name="inv" component={RenderField} type="text" label={t('module.field.title')} value={values.inv} />
       <Field
-        name="content"
-        component={RenderField}
-        type="text"
-        label={t('module.field.content')}
-        value={values.content}
+        name="isWork"
+        component={RenderCheckBox}
+        type="checkbox"
+        label={t('module.field.isWork')}
+        checked={values.isWork}
       />
       <Button color="primary" type="submit" disabled={submitting}>
         {t('module.btn.submit')}
@@ -44,7 +43,7 @@ ModuleForm.propTypes = {
 const ModuleFormWithFormik = withFormik({
   mapPropsToValues: props => ({
     inv: props.module && props.module.inv,
-    content: props.module && props.module.content
+    isWork: props.module && props.module.isWork
   }),
   validate: values => validate(values),
   handleSubmit(

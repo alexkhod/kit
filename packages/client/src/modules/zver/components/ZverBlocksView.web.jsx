@@ -38,7 +38,7 @@ class ZverBlocksView extends React.PureComponent {
     const { block, zverId, addBlock, editBlock, onBlockSelect } = this.props;
 
     if (block.id === null) {
-      addBlock(values.inv, zverId);
+      addBlock(values.inv, values.isWork, zverId);
     } else {
       editBlock(block.id, values.inv);
     }

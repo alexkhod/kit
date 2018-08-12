@@ -159,7 +159,7 @@ input EditModuleInput {
   inv: String!
   isWork: Boolean!
   # Needed for moduleUpdated Subscription filter
-  blockId: Int!
+  #blockId: Int!
 }
 
 # Input for addNoteOnZver Mutation

@@ -10,7 +10,7 @@ import ModuleNotes from '../containers/ModuleNotes';
 import settings from '../../../../../../settings';
 
 const onSubmit = (module, editModule) => values => {
-  editModule(module.id, values.title, values.content);
+  editModule(module.id, values.inv, values.isWork);
 };
 
 const ModuleEditView = ({ loading, module, match, location, subscribeToMore, editModule, t }) => {

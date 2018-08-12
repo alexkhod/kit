@@ -1,9 +1,10 @@
 #import "./Module.graphql"
 
-subscription onModuleUpdated($id: Int!) {
-  moduleUpdated(id: $id) {
+subscription onModuleUpdated($blockId: Int!) {
+  moduleUpdated(blockId: $blockId) {
     mutation
     id
+    blockId
     node {
       ...ModuleInfo
     }

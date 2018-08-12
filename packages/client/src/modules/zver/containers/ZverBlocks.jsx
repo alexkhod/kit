@@ -126,15 +126,16 @@ class ZverBlocks extends React.Component {
 const ZverBlocksWithApollo = compose(
   graphql(ADD_BLOCK, {
     props: ({ mutate }) => ({
-      addBlock: (inv, zverId) =>
+      addBlock: (inv, isWork = false, zverId) =>
         mutate({
-          variables: { input: { inv, zverId } },
+          variables: { input: { inv, isWork, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
             addBlock: {
               __typename: 'Block',
               id: null,
-              inv: inv
+              inv: inv,
+              isWork: isWork
             }
           },
           updateQueries: {

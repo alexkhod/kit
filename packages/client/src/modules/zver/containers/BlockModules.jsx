@@ -3,33 +3,33 @@ import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
 
-import BlockNotesView from '../components/BlockNotesView';
+import BlockModulesView from '../components/BlockModulesView';
 
-import ADD_NOTE_ON_BLOCK from '../graphql/AddNoteOnBlock.graphql';
-import EDIT_NOTE from '../graphql/EditNote.graphql';
-import DELETE_NOTE from '../graphql/DeleteNote.graphql';
-import NOTE_SUBSCRIPTION_ON_BLOCK from '../graphql/NoteSubscriptionOnBlock.graphql';
-import ADD_NOTE_CLIENT from '../graphql/AddNote.client.graphql';
-import NOTE_QUERY_CLIENT from '../graphql/NoteQuery.client.graphql';
+import ADD_MODULE from '../graphql/AddModuleOnBlock.graphql';
+import EDIT_MODULE from '../graphql/EditModule.graphql';
+import DELETE_MODULE from '../graphql/DeleteModule.graphql';
+import MODULE_SUBSCRIPTION from '../graphql/ModuleSubscription.graphql';
+import ADD_MODULE_CLIENT from '../graphql/AddModule.client.graphql';
+import MODULE_QUERY_CLIENT from '../graphql/ModuleQuery.client.graphql';
 
-function AddNote(prev, node) {
+function AddModule(prev, node) {
   // ignore if duplicate
-  if (prev.block.notes.some(note => note.id === node.id)) {
+  if (prev.block.modules.some(module => module.id === node.id)) {
     return prev;
   }
 
-  const filteredNotes = prev.block.notes.filter(note => note.id);
+  const filteredModules = prev.block.modules.filter(module => module.id);
   return update(prev, {
     block: {
-      notes: {
-        $set: [...filteredNotes, node]
+      modules: {
+        $set: [...filteredModules, node]
       }
     }
   });
 }
 
-function DeleteNote(prev, id) {
-  const index = prev.block.notes.findIndex(x => x.id === id);
+function DeleteModule(prev, id) {
+  const index = prev.block.modules.findIndex(x => x.id === id);
 
   // ignore if not found
   if (index < 0) {
@@ -38,19 +38,19 @@ function DeleteNote(prev, id) {
 
   return update(prev, {
     block: {
-      notes: {
+      modules: {
         $splice: [[index, 1]]
       }
     }
   });
 }
 
-class BlockNotes extends React.Component {
+class BlockModules extends React.Component {
   static propTypes = {
     blockId: PropTypes.number.isRequired,
-    notes: PropTypes.array.isRequired,
-    note: PropTypes.object.isRequired,
-    onNoteSelect: PropTypes.func.isRequired,
+    modules: PropTypes.array.isRequired,
+    module: PropTypes.object.isRequired,
+    onModuleSelect: PropTypes.func.isRequired,
     subscribeToMore: PropTypes.func.isRequired
   };
 
@@ -60,7 +60,7 @@ class BlockNotes extends React.Component {
   }
 
   componentDidMount() {
-    this.initNoteListSubscription();
+    this.initModuleListSubscription();
   }
 
   componentDidUpdate(prevProps) {
@@ -70,11 +70,11 @@ class BlockNotes extends React.Component {
       this.subscription();
       this.subscription = null;
     }
-    this.initNoteListSubscription();
+    this.initModuleListSubscription();
   }
 
   componentWillUnmount() {
-    this.props.onNoteSelect({ id: null, content: '' });
+    this.props.onModuleSelect({ id: null, inv: '' });
 
     if (this.subscription) {
       // unsubscribe
@@ -83,24 +83,24 @@ class BlockNotes extends React.Component {
     }
   }
 
-  initNoteListSubscription() {
+  initModuleListSubscription() {
     if (!this.subscription) {
-      this.subscribeToNoteList(this.props.blockId);
+      this.subscribeToModuleList(this.props.blockId);
     }
   }
 
-  subscribeToNoteList = blockId => {
+  subscribeToModuleList = blockId => {
     const { subscribeToMore } = this.props;
 
     this.subscription = subscribeToMore({
-      document: NOTE_SUBSCRIPTION_ON_BLOCK,
+      document: MODULE_SUBSCRIPTION,
       variables: { blockId },
       updateQuery: (
         prev,
         {
           subscriptionData: {
             data: {
-              noteUpdated: { mutation, id, node }
+              moduleUpdated: { mutation, id, node }
             }
           }
         }
@@ -108,9 +108,9 @@ class BlockNotes extends React.Component {
         let newResult = prev;
 
         if (mutation === 'CREATED') {
-          newResult = AddNote(prev, node);
+          newResult = AddModule(prev, node);
         } else if (mutation === 'DELETED') {
-          newResult = DeleteNote(prev, id);
+          newResult = DeleteModule(prev, id);
         }
 
         return newResult;
@@ -119,22 +119,23 @@ class BlockNotes extends React.Component {
   };
 
   render() {
-    return <BlockNotesView {...this.props} />;
+    return <BlockModulesView {...this.props} />;
   }
 }
 
-const BlockNotesWithApollo = compose(
-  graphql(ADD_NOTE_ON_BLOCK, {
+const BlockModulesWithApollo = compose(
+  graphql(ADD_MODULE, {
     props: ({ mutate }) => ({
-      addNote: (content, blockId) =>
+      addModule: (inv, isWork = false, blockId) =>
         mutate({
-          variables: { input: { content, blockId } },
+          variables: { input: { inv, isWork, blockId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            addNoteOnBlock: {
-              __typename: 'Note',
+            addModule: {
+              __typename: 'Module',
               id: null,
-              content: content
+              inv: inv,
+              isWork: isWork
             }
           },
           updateQueries: {
@@ -142,43 +143,43 @@ const BlockNotesWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { addNoteOnBlock }
+                  data: { addModule }
                 }
               }
             ) => {
               if (prev.block) {
-                return AddNote(prev, addNoteOnBlock);
+                return AddModule(prev, addModule);
               }
             }
           }
         })
     })
   }),
-  graphql(EDIT_NOTE, {
+  graphql(EDIT_MODULE, {
     props: ({ ownProps: { blockId }, mutate }) => ({
-      editNote: (id, content) =>
+      editModule: (id, inv) =>
         mutate({
-          variables: { input: { id, blockId, content } },
+          variables: { input: { id, blockId, inv } },
           optimisticResponse: {
             __typename: 'Mutation',
-            editNote: {
-              __typename: 'Note',
+            editModule: {
+              __typename: 'Module',
               id: id,
-              content: content
+              inv: inv
             }
           }
         })
     })
   }),
-  graphql(DELETE_NOTE, {
+  graphql(DELETE_MODULE, {
     props: ({ ownProps: { blockId }, mutate }) => ({
-      deleteNote: id =>
+      deleteModule: id =>
         mutate({
           variables: { input: { id, blockId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            deleteNote: {
-              __typename: 'Note',
+            deleteModule: {
+              __typename: 'Module',
               id: id
             }
           },
@@ -187,28 +188,28 @@ const BlockNotesWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { deleteNote }
+                  data: { deleteModule }
                 }
               }
             ) => {
               if (prev.block) {
-                return DeleteNote(prev, deleteNote.id);
+                return DeleteModule(prev, deleteModule.id);
               }
             }
           }
         })
     })
   }),
-  graphql(ADD_NOTE_CLIENT, {
+  graphql(ADD_MODULE_CLIENT, {
     props: ({ mutate }) => ({
-      onNoteSelect: note => {
-        mutate({ variables: { note: note } });
+      onModuleSelect: module => {
+        mutate({ variables: { module: module } });
       }
     })
   }),
-  graphql(NOTE_QUERY_CLIENT, {
-    props: ({ data: { note } }) => ({ note })
+  graphql(MODULE_QUERY_CLIENT, {
+    props: ({ data: { module } }) => ({ module })
   })
-)(BlockNotes);
+)(BlockModules);
 
-export default BlockNotesWithApollo;
+export default BlockModulesWithApollo;

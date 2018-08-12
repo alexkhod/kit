@@ -10,7 +10,6 @@ class BlockNotesView extends React.PureComponent {
   static propTypes = {
     blockId: PropTypes.number.isRequired,
     notes: PropTypes.array.isRequired,
-    modules: PropTypes.array.isRequired,
     note: PropTypes.object,
     addNote: PropTypes.func.isRequired,
     editNote: PropTypes.func.isRequired,
@@ -48,7 +47,7 @@ class BlockNotesView extends React.PureComponent {
   };
 
   render() {
-    const { blockId, notes, modules, note, t } = this.props;
+    const { blockId, notes, note, t } = this.props;
     const columns = [
       {
         title: t('notes.column.content'),
@@ -76,39 +75,6 @@ class BlockNotesView extends React.PureComponent {
         )
       }
     ];
-    const modulescolumns = [
-      {
-        title: t('modules.column.content'),
-        dataIndex: 'inv',
-        key: 'inv',
-        render: (text, record) => (
-          <Link className="zver-link" to={`/module/${record.id}`}>
-            {text}
-          </Link>
-        )
-      },
-      {
-        title: t('modules.column.actions'),
-        key: 'actions',
-        width: 120,
-        render: (text, record) => (
-          <div style={{ width: 120 }}>
-            <Button
-              color="primary"
-              size="sm"
-              className="edit-note"
-              onClick={() => this.handleEditNote(record.id, record.content)}
-            >
-              {t('notes.btn.edit')}
-            </Button>{' '}
-            <Button color="primary" size="sm" className="delete-note" onClick={() => this.handleDeleteNote(record.id)}>
-              {t('notes.btn.del')}
-            </Button>
-          </div>
-        )
-      }
-    ];
-    //console.log(notes);
 
     return (
       <div>
@@ -116,9 +82,6 @@ class BlockNotesView extends React.PureComponent {
         <BlockNoteForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
         <h1 />
         <Table dataSource={notes} columns={columns} />
-        <h3>{t('modules.title')}</h3>
-        <BlockNoteForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
-        <Table dataSource={modules} columns={modulescolumns} />
       </div>
     );
   }

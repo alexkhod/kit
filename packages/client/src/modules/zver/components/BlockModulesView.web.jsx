@@ -1,0 +1,92 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
+import translate from '../../../i18n';
+import { Table, Button } from '../../common/components/web';
+import BlockModuleForm from './BlockModuleForm';
+
+class BlockModulesView extends React.PureComponent {
+  static propTypes = {
+    blockId: PropTypes.number.isRequired,
+    modules: PropTypes.array.isRequired,
+    module: PropTypes.object,
+    addModule: PropTypes.func.isRequired,
+    editModule: PropTypes.func.isRequired,
+    deleteModule: PropTypes.func.isRequired,
+    subscribeToMore: PropTypes.func.isRequired,
+    onModuleSelect: PropTypes.func.isRequired,
+    t: PropTypes.func
+  };
+
+  handleEditModule = (id, inv) => {
+    const { onModuleSelect } = this.props;
+    onModuleSelect({ id, inv });
+  };
+
+  handleDeleteModule = id => {
+    const { module, onModuleSelect, deleteModule } = this.props;
+
+    if (module.id === id) {
+      onModuleSelect({ id: null, inv: '' });
+    }
+
+    deleteModule(id);
+  };
+
+  onSubmit = () => values => {
+    const { module, blockId, addModule, editModule, onModuleSelect } = this.props;
+
+    if (module.id === null) {
+      addModule(values.inv, values.isWork, blockId);
+    } else {
+      editModule(module.id, values.inv);
+    }
+
+    onModuleSelect({ id: null, inv: '' });
+  };
+
+  render() {
+    const { blockId, modules, module, t } = this.props;
+    const columns = [
+      {
+        title: t('modules.column.content'),
+        dataIndex: 'inv',
+        key: 'inv',
+        render: (text, record) => (
+          <Link className="block-link" to={`/module/${record.id}`}>
+            {text}
+          </Link>
+        )
+      },
+      {
+        title: t('modules.column.actions'),
+        key: 'actions',
+        width: 120,
+        render: (text, record) => (
+          <div style={{ width: 120 }}>
+            <Button
+              color="primary"
+              size="sm"
+              className="delete-module"
+              onClick={() => this.handleDeleteModule(record.id)}
+            >
+              {t('modules.btn.del')}
+            </Button>
+          </div>
+        )
+      }
+    ];
+
+    return (
+      <div>
+        <h3>{t('modules.title')}</h3>
+        <BlockModuleForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={module} module={module} />
+        <h1 />
+        <Table dataSource={modules} columns={columns} />
+      </div>
+    );
+  }
+}
+
+export default translate('zver')(BlockModulesView);

@@ -47,7 +47,7 @@ class ZverNotesView extends React.PureComponent {
   };
 
   render() {
-    const { zverId, notes, blocks, note, t } = this.props;
+    const { zverId, notes, note, t } = this.props;
     const columns = [
       {
         title: t('notes.column.content'),
@@ -75,7 +75,6 @@ class ZverNotesView extends React.PureComponent {
         )
       }
     ];
-    //console.log(note);
 
     return (
       <div>

@@ -107,16 +107,17 @@ export default compose(
   }),
   graphql(EDIT_MODULE, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      editModule: async (id, title, content) => {
+      editModule: async (id, inv, isWork) => {
         await mutate({
-          variables: { input: { id, title: title.trim(), content: content.trim() } }
+          variables: { input: { id, inv: inv.trim(), isWork: isWork } }
         });
-        if (history) {
+        /*if (history) {
           return history.push('/modules');
         }
         if (navigation) {
           return navigation.navigate('ModuleList');
         }
+        */
       }
     })
   })

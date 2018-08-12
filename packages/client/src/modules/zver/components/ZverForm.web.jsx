@@ -4,7 +4,7 @@ import { withFormik } from 'formik';
 
 import translate from '../../../i18n';
 import Field from '../../../utils/FieldAdapter';
-import { Form, RenderField, RenderSwitch, Button, RenderCheckBox } from '../../common/components/web';
+import { Form, RenderField, Button, RenderCheckBox } from '../../common/components/web';
 import { required, validateForm } from '../../../../../common/validation';
 
 const zverFormSchema = {

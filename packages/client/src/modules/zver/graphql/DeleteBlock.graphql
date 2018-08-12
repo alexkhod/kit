@@ -1,5 +1,5 @@
-mutation deleteBlock($id: Int!) {
-  deleteBlock(id: $id) {
+mutation deleteBlock($input: DeleteBlockInput!) {
+  deleteBlock(input: $input) {
     id
   }
 }

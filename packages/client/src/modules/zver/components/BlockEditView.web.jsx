@@ -7,6 +7,7 @@ import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import BlockForm from './BlockForm';
 import BlockNotes from '../containers/BlockNotes';
+import BlockModules from '../containers/BlockModules';
 import settings from '../../../../../../settings';
 
 const onSubmit = (block, editBlock) => values => {
@@ -52,9 +53,11 @@ const BlockEditView = ({ loading, block, match, location, subscribeToMore, editB
         <BlockForm onSubmit={onSubmit(blockObj, editBlock)} block={block} />
         <br />
         {blockObj && (
-          <BlockNotes
+          <BlockNotes blockId={Number(match.params.id)} notes={blockObj.notes} subscribeToMore={subscribeToMore} />
+        )}
+        {blockObj && (
+          <BlockModules
             blockId={Number(match.params.id)}
-            notes={blockObj.notes}
             modules={blockObj.modules}
             subscribeToMore={subscribeToMore}
           />
@@ -73,7 +76,5 @@ BlockEditView.propTypes = {
   subscribeToMore: PropTypes.func.isRequired,
   t: PropTypes.func
 };
-
-console.log(1);
 
 export default translate('zver')(BlockEditView);
