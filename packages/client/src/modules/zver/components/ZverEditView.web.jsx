@@ -41,7 +41,7 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
       </PageLayout>
     );
   } else {
-    console.log(zverObj);
+    //console.log(zverObj);
     return (
       <PageLayout>
         {renderMetaData()}

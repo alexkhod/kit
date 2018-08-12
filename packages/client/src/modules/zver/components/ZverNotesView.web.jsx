@@ -75,7 +75,7 @@ class ZverNotesView extends React.PureComponent {
         )
       }
     ];
-    console.log(note);
+    //console.log(note);
 
     return (
       <div>

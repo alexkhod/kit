@@ -68,14 +68,6 @@ class ZverBlocksView extends React.PureComponent {
             <Button
               color="primary"
               size="sm"
-              className="edit-block"
-              onClick={() => this.handleEditBlock(record.id, record.inv)}
-            >
-              {t('blocks.btn.edit')}
-            </Button>{' '}
-            <Button
-              color="primary"
-              size="sm"
               className="delete-block"
               onClick={() => this.handleDeleteBlock(record.id)}
             >

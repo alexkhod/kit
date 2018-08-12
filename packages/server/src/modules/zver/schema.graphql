@@ -135,7 +135,7 @@ input EditBlockInput {
   inv: String!
   isWork: Boolean!
   # Needed for blockUpdated Subscription filter
-  zverId: Int!
+  #zverId: Int!
 }
 
 # Input for addModule Mutation
