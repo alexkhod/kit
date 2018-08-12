@@ -7,10 +7,11 @@ import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import ZverForm from './ZverForm';
 import ZverNotes from '../containers/ZverNotes';
+import ZverBlocks from '../containers/ZverBlocks';
 import settings from '../../../../../../settings';
 
 const onSubmit = (zver, editZver) => values => {
-  editZver(zver.id, values.title, values.content);
+  editZver(zver.id, values.inv, values.isWork);
 };
 
 const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZver, t }) => {
@@ -40,6 +41,7 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
       </PageLayout>
     );
   } else {
+    console.log(zverObj);
     return (
       <PageLayout>
         {renderMetaData()}
@@ -52,12 +54,10 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
         <ZverForm onSubmit={onSubmit(zverObj, editZver)} zver={zver} />
         <br />
         {zverObj && (
-          <ZverNotes
-            zverId={Number(match.params.id)}
-            notes={zverObj.notes}
-            blocks={zverObj.blocks}
-            subscribeToMore={subscribeToMore}
-          />
+          <ZverNotes zverId={Number(match.params.id)} notes={zverObj.notes} subscribeToMore={subscribeToMore} />
+        )}
+        {zverObj && (
+          <ZverBlocks zverId={Number(match.params.id)} blocks={zverObj.blocks} subscribeToMore={subscribeToMore} />
         )}
       </PageLayout>
     );

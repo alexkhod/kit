@@ -10,7 +10,7 @@ import ZverForm from './ZverForm';
 import settings from '../../../../../../settings';
 
 const onSubmit = addZver => values => {
-  addZver(values.title, values.content);
+  addZver(values.inv, values.isWork);
 };
 
 const ZverAddView = ({ addZver, t }) => {

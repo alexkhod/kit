@@ -19,16 +19,16 @@ class ZverAdd extends React.Component {
 
 export default graphql(ADD_ZVER, {
   props: ({ ownProps: { history, navigation }, mutate }) => ({
-    addZver: async (title, content) => {
+    addZver: async (inv, isWork = false) => {
       let zverData = await mutate({
-        variables: { input: { title: title.trim(), content: content.trim() } },
+        variables: { input: { inv: inv.trim(), isWork: isWork } },
         optimisticResponse: {
           __typename: 'Mutation',
           addZver: {
             __typename: 'Zver',
             id: null,
-            title: title,
-            content: content,
+            inv: inv,
+            isWork: isWork,
             notes: []
           }
         },

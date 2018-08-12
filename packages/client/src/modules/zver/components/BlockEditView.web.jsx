@@ -10,7 +10,7 @@ import BlockNotes from '../containers/BlockNotes';
 import settings from '../../../../../../settings';
 
 const onSubmit = (block, editBlock) => values => {
-  editBlock(block.id, values.title, values.content);
+  editBlock(block.id, values.inv, values.isWork);
 };
 
 const BlockEditView = ({ loading, block, match, location, subscribeToMore, editBlock, t }) => {

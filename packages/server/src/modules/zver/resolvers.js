@@ -80,7 +80,7 @@ export default pubsub => ({
       return zver;
     },
     async deleteZver(obj, { id }, context) {
-      const zver = await context.Zver.zvers(id);
+      const zver = await context.Zver.zver(id);
       const isDeleted = await context.Zver.deleteZver(id);
       if (isDeleted) {
         // publish for zver list
@@ -106,7 +106,7 @@ export default pubsub => ({
     },
     async editZver(obj, { input }, context) {
       await context.Zver.editZver(input);
-      const zver = await context.Zver.zvers(input.id);
+      const zver = await context.Zver.zver(input.id);
       // publish for zver list
       pubsub.publish(ZVERS_SUBSCRIPTION, {
         zversUpdated: {

@@ -1,0 +1,7 @@
+#import "./Block.graphql"
+
+mutation addBlock($input: AddBlockInput!) {
+  addBlock(input: $input) {
+    ...BlockInfo
+  }
+}

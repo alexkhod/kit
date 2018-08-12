@@ -3,33 +3,33 @@ import PropTypes from 'prop-types';
 import { graphql, compose } from 'react-apollo';
 import update from 'immutability-helper';
 
-import ZverNotesView from '../components/ZverNotesView';
+import ZverBlocksView from '../components/ZverBlocksView';
 
-import ADD_NOTE_ON_ZVER from '../graphql/AddNoteOnZver.graphql';
-import EDIT_NOTE from '../graphql/EditNote.graphql';
-import DELETE_NOTE from '../graphql/DeleteNote.graphql';
-import NOTE_SUBSCRIPTION from '../graphql/NoteSubscription.graphql';
-import ADD_NOTE_CLIENT from '../graphql/AddNote.client.graphql';
-import NOTE_QUERY_CLIENT from '../graphql/NoteQuery.client.graphql';
+import ADD_BLOCK from '../graphql/AddBlockOnZver.graphql';
+import EDIT_BLOCK from '../graphql/EditBlock.graphql';
+import DELETE_BLOCK from '../graphql/DeleteBlock.graphql';
+import BLOCK_SUBSCRIPTION from '../graphql/BlockSubscription.graphql';
+import ADD_BLOCK_CLIENT from '../graphql/AddBlock.client.graphql';
+import BLOCK_QUERY_CLIENT from '../graphql/BlockQuery.client.graphql';
 
-function AddNote(prev, node) {
+function AddBlock(prev, node) {
   // ignore if duplicate
-  if (prev.zver.notes.some(note => note.id === node.id)) {
+  if (prev.zver.blocks.some(block => block.id === node.id)) {
     return prev;
   }
 
-  const filteredNotes = prev.zver.notes.filter(note => note.id);
+  const filteredBlocks = prev.zver.blocks.filter(block => block.id);
   return update(prev, {
     zver: {
-      notes: {
-        $set: [...filteredNotes, node]
+      blocks: {
+        $set: [...filteredBlocks, node]
       }
     }
   });
 }
 
-function DeleteNote(prev, id) {
-  const index = prev.zver.notes.findIndex(x => x.id === id);
+function DeleteBlock(prev, id) {
+  const index = prev.zver.blocks.findIndex(x => x.id === id);
 
   // ignore if not found
   if (index < 0) {
@@ -38,19 +38,19 @@ function DeleteNote(prev, id) {
 
   return update(prev, {
     zver: {
-      notes: {
+      blocks: {
         $splice: [[index, 1]]
       }
     }
   });
 }
 
-class ZverNotes extends React.Component {
+class ZverBlocks extends React.Component {
   static propTypes = {
     zverId: PropTypes.number.isRequired,
-    notes: PropTypes.array.isRequired,
-    note: PropTypes.object.isRequired,
-    onNoteSelect: PropTypes.func.isRequired,
+    blocks: PropTypes.array.isRequired,
+    block: PropTypes.object.isRequired,
+    onBlockSelect: PropTypes.func.isRequired,
     subscribeToMore: PropTypes.func.isRequired
   };
 
@@ -60,7 +60,7 @@ class ZverNotes extends React.Component {
   }
 
   componentDidMount() {
-    this.initNoteListSubscription();
+    this.initBlockListSubscription();
   }
 
   componentDidUpdate(prevProps) {
@@ -70,11 +70,11 @@ class ZverNotes extends React.Component {
       this.subscription();
       this.subscription = null;
     }
-    this.initNoteListSubscription();
+    this.initBlockListSubscription();
   }
 
   componentWillUnmount() {
-    this.props.onNoteSelect({ id: null, content: '' });
+    this.props.onBlockSelect({ id: null, inv: '' });
 
     if (this.subscription) {
       // unsubscribe
@@ -83,24 +83,24 @@ class ZverNotes extends React.Component {
     }
   }
 
-  initNoteListSubscription() {
+  initBlockListSubscription() {
     if (!this.subscription) {
-      this.subscribeToNoteList(this.props.zverId);
+      this.subscribeToBlockList(this.props.zverId);
     }
   }
 
-  subscribeToNoteList = zverId => {
+  subscribeToBlockList = zverId => {
     const { subscribeToMore } = this.props;
 
     this.subscription = subscribeToMore({
-      document: NOTE_SUBSCRIPTION,
+      document: BLOCK_SUBSCRIPTION,
       variables: { zverId },
       updateQuery: (
         prev,
         {
           subscriptionData: {
             data: {
-              noteUpdated: { mutation, id, node }
+              blockUpdated: { mutation, id, node }
             }
           }
         }
@@ -108,9 +108,9 @@ class ZverNotes extends React.Component {
         let newResult = prev;
 
         if (mutation === 'CREATED') {
-          newResult = AddNote(prev, node);
+          newResult = AddBlock(prev, node);
         } else if (mutation === 'DELETED') {
-          newResult = DeleteNote(prev, id);
+          newResult = DeleteBlock(prev, id);
         }
 
         return newResult;
@@ -119,23 +119,22 @@ class ZverNotes extends React.Component {
   };
 
   render() {
-    //console.log(note);
-    return <ZverNotesView {...this.props} />;
+    return <ZverBlocksView {...this.props} />;
   }
 }
 
-const ZverNotesWithApollo = compose(
-  graphql(ADD_NOTE_ON_ZVER, {
+const ZverBlocksWithApollo = compose(
+  graphql(ADD_BLOCK, {
     props: ({ mutate }) => ({
-      addNote: (content, zverId) =>
+      addBlock: (inv, zverId) =>
         mutate({
-          variables: { input: { content, zverId } },
+          variables: { input: { inv, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            addNote: {
-              __typename: 'Note',
+            addBlock: {
+              __typename: 'Block',
               id: null,
-              content: content
+              inv: inv
             }
           },
           updateQueries: {
@@ -143,43 +142,43 @@ const ZverNotesWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { addNote }
+                  data: { addBlock }
                 }
               }
             ) => {
               if (prev.zver) {
-                return AddNote(prev, addNote);
+                return AddBlock(prev, addBlock);
               }
             }
           }
         })
     })
   }),
-  graphql(EDIT_NOTE, {
+  graphql(EDIT_BLOCK, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      editNote: (id, content) =>
+      editBlock: (id, inv) =>
         mutate({
-          variables: { input: { id, zverId, content } },
+          variables: { input: { id, zverId, inv } },
           optimisticResponse: {
             __typename: 'Mutation',
-            editNote: {
-              __typename: 'Note',
+            editBlock: {
+              __typename: 'Block',
               id: id,
-              content: content
+              inv: inv
             }
           }
         })
     })
   }),
-  graphql(DELETE_NOTE, {
+  graphql(DELETE_BLOCK, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      deleteNote: id =>
+      deleteBlock: id =>
         mutate({
           variables: { input: { id, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
-            deleteNote: {
-              __typename: 'Note',
+            deleteBlock: {
+              __typename: 'Block',
               id: id
             }
           },
@@ -188,28 +187,28 @@ const ZverNotesWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { deleteNote }
+                  data: { deleteBlock }
                 }
               }
             ) => {
               if (prev.zver) {
-                return DeleteNote(prev, deleteNote.id);
+                return DeleteBlock(prev, deleteBlock.id);
               }
             }
           }
         })
     })
   }),
-  graphql(ADD_NOTE_CLIENT, {
+  graphql(ADD_BLOCK_CLIENT, {
     props: ({ mutate }) => ({
-      onNoteSelect: note => {
-        mutate({ variables: { note: note } });
+      onBlockSelect: block => {
+        mutate({ variables: { block: block } });
       }
     })
   }),
-  graphql(NOTE_QUERY_CLIENT, {
-    props: ({ data: { note } }) => ({ note })
+  graphql(BLOCK_QUERY_CLIENT, {
+    props: ({ data: { block } }) => ({ block })
   })
-)(ZverNotes);
+)(ZverBlocks);
 
-export default ZverNotesWithApollo;
+export default ZverBlocksWithApollo;

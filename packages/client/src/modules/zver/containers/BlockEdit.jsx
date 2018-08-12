@@ -107,16 +107,10 @@ export default compose(
   }),
   graphql(EDIT_BLOCK, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      editBlock: async (id, title, content) => {
+      editBlock: async (id, inv, isWork) => {
         await mutate({
-          variables: { input: { id, title: title.trim(), content: content.trim() } }
+          variables: { input: { id, inv: inv.trim(), isWork: isWork } }
         });
-        if (history) {
-          return history.push('/blocks');
-        }
-        if (navigation) {
-          return navigation.navigate('BlockList');
-        }
       }
     })
   })

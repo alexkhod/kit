@@ -4,12 +4,11 @@ import { withFormik } from 'formik';
 
 import translate from '../../../i18n';
 import Field from '../../../utils/FieldAdapter';
-import { Form, RenderField, Button } from '../../common/components/web';
+import { Form, RenderField, Button, RenderCheckBox } from '../../common/components/web';
 import { required, validateForm } from '../../../../../common/validation';
 
 const blockFormSchema = {
-  inv: [required],
-  content: [required]
+  inv: [required]
 };
 
 const validate = values => validateForm(values, blockFormSchema);
@@ -19,11 +18,11 @@ const BlockForm = ({ values, handleSubmit, submitting, t }) => {
     <Form name="block" onSubmit={handleSubmit}>
       <Field name="inv" component={RenderField} type="text" label={t('block.field.title')} value={values.inv} />
       <Field
-        name="content"
-        component={RenderField}
-        type="text"
+        name="isWork"
+        component={RenderCheckBox}
+        type="checkbox"
         label={t('block.field.content')}
-        value={values.content}
+        checked={values.isWork}
       />
       <Button color="primary" type="submit" disabled={submitting}>
         {t('block.btn.submit')}
@@ -44,7 +43,7 @@ BlockForm.propTypes = {
 const BlockFormWithFormik = withFormik({
   mapPropsToValues: props => ({
     inv: props.block && props.block.inv,
-    content: props.block && props.block.content
+    isWork: props.block && props.block.isWork
   }),
   validate: values => validate(values),
   handleSubmit(

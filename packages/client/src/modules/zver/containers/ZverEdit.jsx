@@ -107,9 +107,9 @@ export default compose(
   }),
   graphql(EDIT_ZVER, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      editZver: async (id, title, content) => {
+      editZver: async (id, inv, isWork) => {
         await mutate({
-          variables: { input: { id, title: title.trim(), content: content.trim() } }
+          variables: { input: { id, inv: inv.trim(), isWork: isWork } }
         });
         if (history) {
           return history.push('/zvers');

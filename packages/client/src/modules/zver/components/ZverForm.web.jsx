@@ -4,12 +4,11 @@ import { withFormik } from 'formik';
 
 import translate from '../../../i18n';
 import Field from '../../../utils/FieldAdapter';
-import { Form, RenderField, Button } from '../../common/components/web';
+import { Form, RenderField, RenderSwitch, Button, RenderCheckBox } from '../../common/components/web';
 import { required, validateForm } from '../../../../../common/validation';
 
 const zverFormSchema = {
-  inv: [required],
-  content: [required]
+  inv: [required]
 };
 
 const validate = values => validateForm(values, zverFormSchema);
@@ -19,11 +18,11 @@ const ZverForm = ({ values, handleSubmit, submitting, t }) => {
     <Form name="zver" onSubmit={handleSubmit}>
       <Field name="inv" component={RenderField} type="text" label={t('zver.field.title')} value={values.inv} />
       <Field
-        name="content"
-        component={RenderField}
-        type="text"
+        name="isWork"
+        component={RenderCheckBox}
+        type="checkbox"
         label={t('zver.field.content')}
-        value={values.content}
+        checked={values.isWork}
       />
       <Button color="primary" type="submit" disabled={submitting}>
         {t('zver.btn.submit')}
@@ -44,7 +43,7 @@ ZverForm.propTypes = {
 const ZverFormWithFormik = withFormik({
   mapPropsToValues: props => ({
     inv: props.zver && props.zver.inv,
-    content: props.zver && props.zver.content
+    isWork: props.zver && props.zver.isWork
   }),
   validate: values => validate(values),
   handleSubmit(

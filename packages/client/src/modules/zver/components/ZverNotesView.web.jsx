@@ -10,7 +10,6 @@ class ZverNotesView extends React.PureComponent {
   static propTypes = {
     zverId: PropTypes.number.isRequired,
     notes: PropTypes.array.isRequired,
-    blocks: PropTypes.array.isRequired,
     note: PropTypes.object,
     addNote: PropTypes.func.isRequired,
     editNote: PropTypes.func.isRequired,
@@ -76,39 +75,7 @@ class ZverNotesView extends React.PureComponent {
         )
       }
     ];
-    const blockscolumns = [
-      {
-        title: t('blocks.column.content'),
-        dataIndex: 'inv',
-        key: 'inv',
-        render: (text, record) => (
-          <Link className="zver-link" to={`/block/${record.id}`}>
-            {text}
-          </Link>
-        )
-      },
-      {
-        title: t('blocks.column.actions'),
-        key: 'actions',
-        width: 120,
-        render: (text, record) => (
-          <div style={{ width: 120 }}>
-            <Button
-              color="primary"
-              size="sm"
-              className="edit-note"
-              onClick={() => this.handleEditNote(record.id, record.content)}
-            >
-              {t('notes.btn.edit')}
-            </Button>{' '}
-            <Button color="primary" size="sm" className="delete-note" onClick={() => this.handleDeleteNote(record.id)}>
-              {t('notes.btn.del')}
-            </Button>
-          </div>
-        )
-      }
-    ];
-    //console.log(notes);
+    console.log(note);
 
     return (
       <div>
@@ -116,9 +83,6 @@ class ZverNotesView extends React.PureComponent {
         <ZverNoteForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
         <h1 />
         <Table dataSource={notes} columns={columns} />
-        <h3>{t('blocks.title')}</h3>
-        <ZverNoteForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
-        <Table dataSource={blocks} columns={blockscolumns} />
       </div>
     );
   }
