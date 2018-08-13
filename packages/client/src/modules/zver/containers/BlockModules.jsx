@@ -51,7 +51,9 @@ class BlockModules extends React.Component {
     modules: PropTypes.array.isRequired,
     module: PropTypes.object.isRequired,
     onModuleSelect: PropTypes.func.isRequired,
-    subscribeToMore: PropTypes.func.isRequired
+    subscribeToMore: PropTypes.func.isRequired,
+    history: PropTypes.object,
+    navigation: PropTypes.object
   };
 
   constructor(props) {
@@ -125,9 +127,9 @@ class BlockModules extends React.Component {
 
 const BlockModulesWithApollo = compose(
   graphql(ADD_MODULE, {
-    props: ({ mutate }) => ({
-      addModule: (inv, isWork = false, blockId) =>
-        mutate({
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
+      addModule: async (inv, isWork = false, blockId) => {
+        let moduleData = await mutate({
           variables: { input: { inv, isWork, blockId } },
           optimisticResponse: {
             __typename: 'Mutation',
@@ -152,7 +154,16 @@ const BlockModulesWithApollo = compose(
               }
             }
           }
-        })
+        });
+
+        if (history) {
+          return history.push('/module/' + moduleData.data.addModule.id, {
+            module: moduleData.data.addModule
+          });
+        } else if (navigation) {
+          return navigation.navigate('ModuleEdit', { id: moduleData.data.addModule.id });
+        }
+      }
     })
   }),
   graphql(EDIT_MODULE, {

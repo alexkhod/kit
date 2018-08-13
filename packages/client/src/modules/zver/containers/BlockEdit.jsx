@@ -111,6 +111,14 @@ export default compose(
         await mutate({
           variables: { input: { id, inv: inv.trim(), isWork: isWork } }
         });
+        if (history) {
+          //return history.push('/');
+          return console.log(1, history);
+        }
+        if (navigation) {
+          //return navigation.navigate('ZverList');
+          return console.log(2, navigation);
+        }
       }
     })
   })

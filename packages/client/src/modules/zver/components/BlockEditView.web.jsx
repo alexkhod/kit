@@ -14,7 +14,7 @@ const onSubmit = (block, editBlock) => values => {
   editBlock(block.id, values.inv, values.isWork);
 };
 
-const BlockEditView = ({ loading, block, match, location, subscribeToMore, editBlock, t }) => {
+const BlockEditView = ({ loading, block, match, location, subscribeToMore, editBlock, t, history, navigation }) => {
   let blockObj = block;
   // if new block was just added read it from router
   if (!blockObj && location.state) {
@@ -62,6 +62,8 @@ const BlockEditView = ({ loading, block, match, location, subscribeToMore, editB
             blockId={Number(match.params.id)}
             modules={blockObj.modules}
             subscribeToMore={subscribeToMore}
+            history={history}
+            navigation={navigation}
           />
         )}
       </PageLayout>
@@ -76,7 +78,9 @@ BlockEditView.propTypes = {
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   subscribeToMore: PropTypes.func.isRequired,
-  t: PropTypes.func
+  t: PropTypes.func,
+  history: PropTypes.object,
+  navigation: PropTypes.object
 };
 
 export default translate('zver')(BlockEditView);

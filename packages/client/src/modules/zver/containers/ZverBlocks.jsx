@@ -51,7 +51,9 @@ class ZverBlocks extends React.Component {
     blocks: PropTypes.array.isRequired,
     block: PropTypes.object.isRequired,
     onBlockSelect: PropTypes.func.isRequired,
-    subscribeToMore: PropTypes.func.isRequired
+    subscribeToMore: PropTypes.func.isRequired,
+    history: PropTypes.object,
+    navigation: PropTypes.object
   };
 
   constructor(props) {
@@ -125,9 +127,9 @@ class ZverBlocks extends React.Component {
 
 const ZverBlocksWithApollo = compose(
   graphql(ADD_BLOCK, {
-    props: ({ mutate }) => ({
-      addBlock: (inv, isWork = false, zverId) =>
-        mutate({
+    props: ({ ownProps: { history, navigation }, mutate }) => ({
+      addBlock: async (inv, isWork = false, zverId) => {
+        let blockData = await mutate({
           variables: { input: { inv, isWork, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
@@ -152,7 +154,16 @@ const ZverBlocksWithApollo = compose(
               }
             }
           }
-        })
+        });
+
+        if (history) {
+          return history.push('/block/' + blockData.data.addBlock.id, {
+            block: blockData.data.addBlock
+          });
+        } else if (navigation) {
+          return navigation.navigate('BlockEdit', { id: blockData.data.addBlock.id });
+        }
+      }
     })
   }),
   graphql(EDIT_BLOCK, {

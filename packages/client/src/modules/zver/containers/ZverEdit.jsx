@@ -111,12 +111,12 @@ export default compose(
         await mutate({
           variables: { input: { id, inv: inv.trim(), isWork: isWork } }
         });
-        /*if (history) {
-          return history.push('/zvers');
+        if (history) {
+          return history.push('/');
         }
         if (navigation) {
           return navigation.navigate('ZverList');
-        }*/
+        }
       }
     })
   })

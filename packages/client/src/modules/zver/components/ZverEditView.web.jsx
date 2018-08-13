@@ -14,7 +14,7 @@ const onSubmit = (zver, editZver) => values => {
   editZver(zver.id, values.inv, values.isWork);
 };
 
-const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZver, t }) => {
+const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZver, t, history, navigation }) => {
   let zverObj = zver;
   // if new zver was just added read it from router
   if (!zverObj && location.state) {
@@ -56,7 +56,13 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
           <ZverNotes zverId={Number(match.params.id)} notes={zverObj.notes} subscribeToMore={subscribeToMore} />
         )}
         {zverObj && (
-          <ZverBlocks zverId={Number(match.params.id)} blocks={zverObj.blocks} subscribeToMore={subscribeToMore} />
+          <ZverBlocks
+            zverId={Number(match.params.id)}
+            blocks={zverObj.blocks}
+            subscribeToMore={subscribeToMore}
+            history={history}
+            navigation={navigation}
+          />
         )}
       </PageLayout>
     );
@@ -70,7 +76,9 @@ ZverEditView.propTypes = {
   match: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   subscribeToMore: PropTypes.func.isRequired,
-  t: PropTypes.func
+  t: PropTypes.func,
+  history: PropTypes.object,
+  navigation: PropTypes.object
 };
 
 export default translate('zver')(ZverEditView);
