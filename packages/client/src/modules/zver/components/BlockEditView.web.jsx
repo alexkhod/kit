@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import BlockForm from './BlockForm';
 import BlockNotes from '../containers/BlockNotes';
 import BlockModules from '../containers/BlockModules';
-import settings from '../../../../../../settings';
+// import settings from '../../../../../../settings';
 
 const onSubmit = (block, editBlock) => values => {
   editBlock(block.id, values.inv, values.isWork);
@@ -23,7 +23,7 @@ const BlockEditView = ({ loading, block, match, location, subscribeToMore, editB
 
   const renderMetaData = () => (
     <Helmet
-      title={`${settings.app.name} - ${t('block.title')}`}
+      title={t('block.title')} // title={`${settings.app.name} - ${t('block.title')}`}
       meta={[
         {
           name: 'description',
@@ -44,9 +44,11 @@ const BlockEditView = ({ loading, block, match, location, subscribeToMore, editB
     return (
       <PageLayout>
         {renderMetaData()}
+        {/*
         <Link id="back-button" to="/blocks">
           {t('block.btn.back')}
         </Link>
+        */}
         <h2>
           {t(`block.label.edit`)} {t('block.label.block')}
         </h2>

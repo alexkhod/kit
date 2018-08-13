@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import ModuleForm from './ModuleForm';
 import ModuleNotes from '../containers/ModuleNotes';
-import settings from '../../../../../../settings';
+// import settings from '../../../../../../settings';
 
 const onSubmit = (module, editModule) => values => {
   editModule(module.id, values.inv, values.isWork);
@@ -22,7 +22,7 @@ const ModuleEditView = ({ loading, module, match, location, subscribeToMore, edi
 
   const renderMetaData = () => (
     <Helmet
-      title={`${settings.app.name} - ${t('module.title')}`}
+      title={t('module.title')} // title={`${settings.app.name} - ${t('module.title')}`}
       meta={[
         {
           name: 'description',
@@ -43,9 +43,11 @@ const ModuleEditView = ({ loading, module, match, location, subscribeToMore, edi
     return (
       <PageLayout>
         {renderMetaData()}
+        {/*
         <Link id="back-button" to="/modules">
           {t('module.btn.back')}
         </Link>
+        */}
         <h2>
           {t(`module.label.edit`)} {t('module.label.module')}
         </h2>

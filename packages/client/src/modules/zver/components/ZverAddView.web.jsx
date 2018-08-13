@@ -7,7 +7,7 @@ import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import ZverForm from './ZverForm';
 
-import settings from '../../../../../../settings';
+// import settings from '../../../../../../settings';
 
 const onSubmit = addZver => values => {
   addZver(values.inv, values.isWork);
@@ -16,7 +16,7 @@ const onSubmit = addZver => values => {
 const ZverAddView = ({ addZver, t }) => {
   const renderMetaData = () => (
     <Helmet
-      title={`${settings.app.name} - ${t('zver.title')}`}
+      title={t('zver.add')} // title={`${settings.app.name} - ${t('zver.title')}`}
       meta={[
         {
           name: 'description',
@@ -28,7 +28,7 @@ const ZverAddView = ({ addZver, t }) => {
   return (
     <PageLayout>
       {renderMetaData()}
-      <Link id="back-button" to="/zvers">
+      <Link id="back-button" to="/">
         {t('zver.btn.back')}
       </Link>
       <h2>

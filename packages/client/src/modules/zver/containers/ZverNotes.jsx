@@ -74,7 +74,7 @@ class ZverNotes extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.onNoteSelect({ id: null, content: '' });
+    this.props.onNoteSelect({ id: null, content: '', updated_at: '' });
 
     if (this.subscription) {
       // unsubscribe

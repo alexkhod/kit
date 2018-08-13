@@ -8,7 +8,7 @@ import { PageLayout } from '../../common/components/web';
 import ZverForm from './ZverForm';
 import ZverNotes from '../containers/ZverNotes';
 import ZverBlocks from '../containers/ZverBlocks';
-import settings from '../../../../../../settings';
+// import settings from '../../../../../../settings';
 
 const onSubmit = (zver, editZver) => values => {
   editZver(zver.id, values.inv, values.isWork);
@@ -23,7 +23,7 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
 
   const renderMetaData = () => (
     <Helmet
-      title={`${settings.app.name} - ${t('zver.title')}`}
+      title={t('zver.title')} // title={`${settings.app.name} - ${t('zver.title')}`}
       meta={[
         {
           name: 'description',
@@ -44,7 +44,7 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
     return (
       <PageLayout>
         {renderMetaData()}
-        <Link id="back-button" to="/zvers">
+        <Link id="back-button" to="/">
           {t('zver.btn.back')}
         </Link>
         <h2>

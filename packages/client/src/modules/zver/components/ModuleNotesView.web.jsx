@@ -49,6 +49,11 @@ class ModuleNotesView extends React.PureComponent {
     const { moduleId, notes, note, t } = this.props;
     const columns = [
       {
+        title: t('notes.column.updated'),
+        dataIndex: 'updated_at',
+        key: 'updated_at'
+      },
+      {
         title: t('notes.column.content'),
         dataIndex: 'content',
         key: 'content'

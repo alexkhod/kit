@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
@@ -49,6 +49,11 @@ class BlockNotesView extends React.PureComponent {
   render() {
     const { blockId, notes, note, t } = this.props;
     const columns = [
+      {
+        title: t('notes.column.updated'),
+        dataIndex: 'updated_at',
+        key: 'updated_at'
+      },
       {
         title: t('notes.column.content'),
         dataIndex: 'content',

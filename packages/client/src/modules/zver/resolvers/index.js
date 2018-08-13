@@ -13,6 +13,7 @@ const defaults = {
   note: {
     id: null,
     content: '',
+    updated_at: '',
     __typename: TYPE_NAME_NOTE
   },
   block: {

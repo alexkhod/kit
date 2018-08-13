@@ -27,7 +27,7 @@ class ZverList extends React.PureComponent {
     const { t } = this.props;
     return (
       <Helmet
-        title={`${settings.app.name} - ${t('list.title')}`}
+        title={t('list.title')} // title={`${settings.app.name} - ${t('list.title')}`}
         meta={[
           {
             name: 'description',

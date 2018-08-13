@@ -1,5 +1,5 @@
 export default {
-  name: 'Apollo Starter Kit',
+  name: '',
   logging: {
     level: 'info',
     debugSQL: false,
