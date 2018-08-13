@@ -18,16 +18,16 @@ class ModuleNotesView extends React.PureComponent {
     t: PropTypes.func
   };
 
-  handleEditNote = (id, content) => {
+  handleEditNote = (id, content, updated_at) => {
     const { onNoteSelect } = this.props;
-    onNoteSelect({ id, content });
+    onNoteSelect({ id, content, updated_at });
   };
 
   handleDeleteNote = id => {
     const { note, onNoteSelect, deleteNote } = this.props;
 
     if (note.id === id) {
-      onNoteSelect({ id: null, content: '' });
+      onNoteSelect({ id: null, content: '', updated_at: '' });
     }
 
     deleteNote(id);
@@ -39,10 +39,10 @@ class ModuleNotesView extends React.PureComponent {
     if (note.id === null) {
       addNote(values.content, moduleId);
     } else {
-      editNote(note.id, values.content);
+      editNote(note.id, values.content, values.updated_at);
     }
 
-    onNoteSelect({ id: null, content: '' });
+    onNoteSelect({ id: null, content: '', updated_at: '' });
   };
 
   render() {
@@ -68,7 +68,7 @@ class ModuleNotesView extends React.PureComponent {
               color="primary"
               size="sm"
               className="edit-note"
-              onClick={() => this.handleEditNote(record.id, record.content)}
+              onClick={() => this.handleEditNote(record.id, record.content, record.updated_at)}
             >
               {t('notes.btn.edit')}
             </Button>{' '}

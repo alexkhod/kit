@@ -74,7 +74,7 @@ class ModuleNotes extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.onNoteSelect({ id: null, content: '' });
+    this.props.onNoteSelect({ id: null, content: '', updated_at: '' });
 
     if (this.subscription) {
       // unsubscribe
@@ -126,15 +126,16 @@ class ModuleNotes extends React.Component {
 const ModuleNotesWithApollo = compose(
   graphql(ADD_NOTE_ON_MODULE, {
     props: ({ mutate }) => ({
-      addNote: (content, moduleId) =>
+      addNote: (content, moduleId, updated_at = '') =>
         mutate({
-          variables: { input: { content, moduleId } },
+          variables: { input: { content, moduleId, updated_at } },
           optimisticResponse: {
             __typename: 'Mutation',
             addNoteOnModule: {
               __typename: 'Note',
               id: null,
-              content: content
+              content: content,
+              updated_at: updated_at
             }
           },
           updateQueries: {
@@ -156,15 +157,16 @@ const ModuleNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { moduleId }, mutate }) => ({
-      editNote: (id, content) =>
+      editNote: (id, content, updated_at) =>
         mutate({
-          variables: { input: { id, moduleId, content } },
+          variables: { input: { id, moduleId, content, updated_at } },
           optimisticResponse: {
             __typename: 'Mutation',
             editNote: {
               __typename: 'Note',
               id: id,
-              content: content
+              content: content,
+              updated_at: updated_at
             }
           }
         })

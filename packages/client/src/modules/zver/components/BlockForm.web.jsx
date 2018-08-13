@@ -21,7 +21,7 @@ const BlockForm = ({ values, handleSubmit, submitting, t }) => {
         name="isWork"
         component={RenderCheckBox}
         type="checkbox"
-        label={t('block.field.content')}
+        label={t('block.field.isWork')}
         checked={values.isWork}
       />
       <Button color="primary" type="submit" disabled={submitting}>

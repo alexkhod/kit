@@ -127,15 +127,16 @@ class ZverNotes extends React.Component {
 const ZverNotesWithApollo = compose(
   graphql(ADD_NOTE_ON_ZVER, {
     props: ({ mutate }) => ({
-      addNote: (content, zverId) =>
+      addNote: (content, zverId, updated_at = '') =>
         mutate({
-          variables: { input: { content, zverId } },
+          variables: { input: { content, zverId, updated_at } },
           optimisticResponse: {
             __typename: 'Mutation',
             addNote: {
               __typename: 'Note',
               id: null,
-              content: content
+              content: content,
+              updated_at: updated_at
             }
           },
           updateQueries: {
@@ -157,15 +158,16 @@ const ZverNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      editNote: (id, content) =>
+      editNote: (id, content, updated_at) =>
         mutate({
-          variables: { input: { id, zverId, content } },
+          variables: { input: { id, zverId, content, updated_at } },
           optimisticResponse: {
             __typename: 'Mutation',
             editNote: {
               __typename: 'Note',
               id: id,
-              content: content
+              content: content,
+              updated_at: updated_at
             }
           }
         })

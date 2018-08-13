@@ -165,6 +165,7 @@ input EditModuleInput {
 # Input for addNoteOnZver Mutation
 input AddNoteOnZverInput {
   content: String!
+  updated_at: String
   # Needed for moduleUpdated Subscription filter
   zverId: Int
 }
@@ -172,6 +173,7 @@ input AddNoteOnZverInput {
 # Input for AddNoteOnBlock Mutation
 input AddNoteOnBlockInput {
   content: String!
+  updated_at: String
   # Needed for moduleUpdated Subscription filter
   blockId: Int
 }
@@ -179,6 +181,7 @@ input AddNoteOnBlockInput {
 # Input for AddNoteOnModule Mutation
 input AddNoteOnModuleInput {
   content: String!
+  updated_at: String
   # Needed for moduleUpdated Subscription filter
   moduleId: Int
 }
@@ -196,6 +199,7 @@ input DeleteNoteInput {
 input EditNoteInput {
   id: Int!
   content: String!
+  updated_at: String
   # Needed for moduleUpdated Subscription filter
   zverId: Int
   blockId: Int

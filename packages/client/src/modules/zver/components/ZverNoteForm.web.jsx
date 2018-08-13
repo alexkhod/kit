@@ -62,7 +62,7 @@ const ZverNoteFormWithFormik = withFormik({
     }
   ) {
     await onSubmit(values);
-    resetForm({ content: '' });
+    resetForm({ content: '', updated_at: '' });
   },
   validate: values => validate(values),
   displayName: 'NoteForm', // helps with React DevTools,
