@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
 import ZverForm from './ZverForm';
 import ZverNotes from '../containers/ZverNotes';
 import ZverBlocks from '../containers/ZverBlocks';
+// import { IfLoggedIn } from '../../user/containers/AuthBase';
 // import settings from '../../../../../../settings';
 
 const onSubmit = (zver, editZver) => values => {
@@ -44,9 +45,11 @@ const ZverEditView = ({ loading, zver, match, location, subscribeToMore, editZve
     return (
       <PageLayout>
         {renderMetaData()}
-        <Link id="back-button" to="/">
+        {/*
+        <Link id="back-button" to="/zvers">
           {t('zver.btn.back')}
         </Link>
+        */}
         <h2>
           {t(`zver.label.edit`)} {t('zver.label.zver')}
         </h2>

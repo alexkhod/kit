@@ -8,6 +8,7 @@ import { PageLayout } from '../../common/components/web';
 import BlockForm from './BlockForm';
 import BlockNotes from '../containers/BlockNotes';
 import BlockModules from '../containers/BlockModules';
+// import { IfLoggedIn } from '../../user/containers/AuthBase';
 // import settings from '../../../../../../settings';
 
 const onSubmit = (block, editBlock) => values => {

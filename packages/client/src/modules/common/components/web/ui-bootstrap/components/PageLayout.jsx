@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Container } from 'reactstrap';
 
 import NavBar from './NavBar';
-import settings from '../../../../../../../../../settings';
+// import settings from '../../../../../../../../../settings';
 
 const footerHeight = '40px';
 
@@ -22,7 +22,9 @@ const PageLayout = ({ children, navBar }) => {
         <Container id="content">{children}</Container>
       </section>
       <Footer className="d-flex flex-shrink-0 justify-content-center">
+        {/*
         <span>&copy; 2017. {settings.app.name}.</span>
+        */}
       </Footer>
     </section>
   );

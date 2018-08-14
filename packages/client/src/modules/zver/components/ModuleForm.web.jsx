@@ -6,6 +6,7 @@ import translate from '../../../i18n';
 import Field from '../../../utils/FieldAdapter';
 import { Form, RenderField, RenderCheckBox, Button } from '../../common/components/web';
 import { required, validateForm } from '../../../../../common/validation';
+import { IfLoggedIn } from '../../user/containers/AuthBase';
 
 const moduleFormSchema = {
   inv: [required]
@@ -16,7 +17,9 @@ const validate = values => validateForm(values, moduleFormSchema);
 const ModuleForm = ({ values, handleSubmit, submitting, t }) => {
   return (
     <Form name="module" onSubmit={handleSubmit}>
-      <Field name="inv" component={RenderField} type="text" label={t('module.field.title')} value={values.inv} />
+      <IfLoggedIn role="admin">
+        <Field name="inv" component={RenderField} type="text" label={t('module.field.title')} value={values.inv} />
+      </IfLoggedIn>
       <Field
         name="isWork"
         component={RenderCheckBox}

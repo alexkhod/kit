@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
 import BlockModuleForm from './BlockModuleForm';
+import { IfLoggedIn } from '../../user/containers/AuthBase';
 
 class BlockModulesView extends React.PureComponent {
   static propTypes = {
@@ -64,16 +65,18 @@ class BlockModulesView extends React.PureComponent {
         key: 'actions',
         width: 120,
         render: (text, record) => (
-          <div style={{ width: 120 }}>
-            <Button
-              color="primary"
-              size="sm"
-              className="delete-module"
-              onClick={() => this.handleDeleteModule(record.id)}
-            >
-              {t('modules.btn.del')}
-            </Button>
-          </div>
+          <IfLoggedIn role="admin">
+            <div style={{ width: 120 }}>
+              <Button
+                color="primary"
+                size="sm"
+                className="delete-module"
+                onClick={() => this.handleDeleteModule(record.id)}
+              >
+                {t('modules.btn.del')}
+              </Button>
+            </div>
+          </IfLoggedIn>
         )
       }
     ];
@@ -81,7 +84,9 @@ class BlockModulesView extends React.PureComponent {
     return (
       <div>
         <h3>{t('modules.title')}</h3>
-        <BlockModuleForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={module} module={module} />
+        <IfLoggedIn role="admin">
+          <BlockModuleForm blockId={blockId} onSubmit={this.onSubmit()} initialValues={module} module={module} />
+        </IfLoggedIn>
         <h1 />
         <Table dataSource={modules} columns={columns} />
       </div>

@@ -6,6 +6,7 @@ import { PageLayout, Table, Button, Pagination } from '../../common/components/w
 import translate from '../../../i18n';
 import settings from '../../../../../../settings';
 import paginationConfig from '../../../../../../config/pagination';
+import { IfLoggedIn } from '../../user/containers/AuthBase';
 
 const { itemsNumber, type } = paginationConfig.web;
 
@@ -78,14 +79,16 @@ class ZverList extends React.PureComponent {
           key: 'actions',
           width: 50,
           render: (text, record) => (
-            <Button
-              color="primary"
-              size="sm"
-              className="delete-button"
-              onClick={() => this.handleDeleteZver(record.id)}
-            >
-              {t('zver.btn.del')}
-            </Button>
+            <IfLoggedIn role="admin">
+              <Button
+                color="primary"
+                size="sm"
+                className="delete-button"
+                onClick={() => this.handleDeleteZver(record.id)}
+              >
+                {t('zver.btn.del')}
+              </Button>
+            </IfLoggedIn>
           )
         }
       ];
@@ -93,9 +96,11 @@ class ZverList extends React.PureComponent {
         <PageLayout>
           {this.renderMetaData()}
           <h2>{t('list.subTitle')}</h2>
-          <Link to="/zver/new">
-            <Button color="primary">{t('list.btn.add')}</Button>
-          </Link>
+          <IfLoggedIn role="admin">
+            <Link to="/zver/new">
+              <Button color="primary">{t('list.btn.add')}</Button>
+            </Link>
+          </IfLoggedIn>
           <h1 />
           <Table dataSource={zvers.edges.map(({ node }) => node)} columns={columns} />
           <Pagination

@@ -112,7 +112,7 @@ export default compose(
           variables: { input: { id, inv: inv.trim(), isWork: isWork } }
         });
         if (history) {
-          return history.push('/');
+          return history.push('/zvers');
         }
         if (navigation) {
           return navigation.navigate('ZverList');

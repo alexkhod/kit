@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
 import ModuleNoteForm from './ModuleNoteForm';
+import { IfLoggedIn } from '../../user/containers/AuthBase';
 
 class ModuleNotesView extends React.PureComponent {
   static propTypes = {
@@ -63,19 +64,26 @@ class ModuleNotesView extends React.PureComponent {
         key: 'actions',
         width: 120,
         render: (text, record) => (
-          <div style={{ width: 120 }}>
-            <Button
-              color="primary"
-              size="sm"
-              className="edit-note"
-              onClick={() => this.handleEditNote(record.id, record.content, record.updated_at)}
-            >
-              {t('notes.btn.edit')}
-            </Button>{' '}
-            <Button color="primary" size="sm" className="delete-note" onClick={() => this.handleDeleteNote(record.id)}>
-              {t('notes.btn.del')}
-            </Button>
-          </div>
+          <IfLoggedIn role="admin">
+            <div style={{ width: 120 }}>
+              <Button
+                color="primary"
+                size="sm"
+                className="edit-note"
+                onClick={() => this.handleEditNote(record.id, record.content, record.updated_at)}
+              >
+                {t('notes.btn.edit')}
+              </Button>{' '}
+              <Button
+                color="primary"
+                size="sm"
+                className="delete-note"
+                onClick={() => this.handleDeleteNote(record.id)}
+              >
+                {t('notes.btn.del')}
+              </Button>
+            </div>
+          </IfLoggedIn>
         )
       }
     ];

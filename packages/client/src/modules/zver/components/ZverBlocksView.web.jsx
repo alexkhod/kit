@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
 import ZverBlockForm from './ZverBlockForm';
+import { IfLoggedIn } from '../../user/containers/AuthBase';
 
 class ZverBlocksView extends React.PureComponent {
   static propTypes = {
@@ -64,16 +65,18 @@ class ZverBlocksView extends React.PureComponent {
         key: 'actions',
         width: 120,
         render: (text, record) => (
-          <div style={{ width: 120 }}>
-            <Button
-              color="primary"
-              size="sm"
-              className="delete-block"
-              onClick={() => this.handleDeleteBlock(record.id)}
-            >
-              {t('blocks.btn.del')}
-            </Button>
-          </div>
+          <IfLoggedIn role="admin">
+            <div style={{ width: 120 }}>
+              <Button
+                color="primary"
+                size="sm"
+                className="delete-block"
+                onClick={() => this.handleDeleteBlock(record.id)}
+              >
+                {t('blocks.btn.del')}
+              </Button>
+            </div>
+          </IfLoggedIn>
         )
       }
     ];
@@ -81,7 +84,9 @@ class ZverBlocksView extends React.PureComponent {
     return (
       <div>
         <h3>{t('blocks.title')}</h3>
-        <ZverBlockForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={block} block={block} />
+        <IfLoggedIn role="admin">
+          <ZverBlockForm zverId={zverId} onSubmit={this.onSubmit()} initialValues={block} block={block} />
+        </IfLoggedIn>
         <h1 />
         <Table dataSource={blocks} columns={columns} />
       </div>
