@@ -31,7 +31,7 @@ export default class Zver {
 
   async getNotesForZverIds(zverIds) {
     const res = await knex
-      .select('id', 'content', 'created_at', 'updated_at', 'zver_id AS zverId')
+      .select('id', 'content', 'created_at', 'updated_at', 'user_id', 'zver_id AS zverId')
       .from('note')
       .whereIn('zver_id', zverIds);
 
@@ -40,7 +40,7 @@ export default class Zver {
 
   async getNotesForBlockIds(blockIds) {
     const res = await knex
-      .select('id', 'content', 'created_at', 'updated_at', 'block_id AS blockId')
+      .select('id', 'content', 'created_at', 'updated_at', 'user_id', 'block_id AS blockId')
       .from('note')
       .whereIn('block_id', blockIds);
 
@@ -49,7 +49,7 @@ export default class Zver {
 
   async getNotesForModuleIds(moduleIds) {
     const res = await knex
-      .select('id', 'content', 'created_at', 'updated_at', 'module_id AS moduleId')
+      .select('id', 'content', 'created_at', 'updated_at', 'user_id', 'module_id AS moduleId')
       .from('note')
       .whereIn('module_id', moduleIds);
 
@@ -143,21 +143,21 @@ export default class Zver {
       });
   }
 
-  addNoteOnZver({ content, zverId }, { id }) {
-    return returnId(knex('note')).insert({ content, zver_id: zverId, user_id: id });
+  addNoteOnZver({ content, zverId }, { username }) {
+    return returnId(knex('note')).insert({ content, zver_id: zverId, user_id: username });
   }
 
-  addNoteOnBlock({ content, blockId }) {
-    return returnId(knex('note')).insert({ content, block_id: blockId });
+  addNoteOnBlock({ content, blockId }, { username }) {
+    return returnId(knex('note')).insert({ content, block_id: blockId, user_id: username });
   }
 
-  addNoteOnModule({ content, moduleId }) {
-    return returnId(knex('note')).insert({ content, module_id: moduleId });
+  addNoteOnModule({ content, moduleId }, { username }) {
+    return returnId(knex('note')).insert({ content, module_id: moduleId, user_id: username });
   }
 
   getNote(id) {
     return knex
-      .select('id', 'content', 'created_at', 'updated_at')
+      .select('id', 'content', 'created_at', 'updated_at', 'user_id')
       .from('note')
       .where('id', '=', id)
       .first();

@@ -19,16 +19,16 @@ class ModuleNotesView extends React.PureComponent {
     t: PropTypes.func
   };
 
-  handleEditNote = (id, content, updated_at) => {
+  handleEditNote = (id, content, updated_at, user_id) => {
     const { onNoteSelect } = this.props;
-    onNoteSelect({ id, content, updated_at });
+    onNoteSelect({ id, content, updated_at, user_id });
   };
 
   handleDeleteNote = id => {
     const { note, onNoteSelect, deleteNote } = this.props;
 
     if (note.id === id) {
-      onNoteSelect({ id: null, content: '', updated_at: '' });
+      onNoteSelect({ id: null, content: '', updated_at: '', user_id: '' });
     }
 
     deleteNote(id);
@@ -40,15 +40,20 @@ class ModuleNotesView extends React.PureComponent {
     if (note.id === null) {
       addNote(values.content, moduleId);
     } else {
-      editNote(note.id, values.content, values.updated_at);
+      editNote(note.id, values.content, values.updated_at, values.user_id);
     }
 
-    onNoteSelect({ id: null, content: '', updated_at: '' });
+    onNoteSelect({ id: null, content: '', updated_at: '', user_id: '' });
   };
 
   render() {
     const { moduleId, notes, note, t } = this.props;
     const columns = [
+      {
+        title: t('notes.column.user'),
+        dataIndex: 'user_id',
+        key: 'user_id'
+      },
       {
         title: t('notes.column.updated'),
         dataIndex: 'updated_at',
@@ -70,7 +75,7 @@ class ModuleNotesView extends React.PureComponent {
                 color="primary"
                 size="sm"
                 className="edit-note"
-                onClick={() => this.handleEditNote(record.id, record.content, record.updated_at)}
+                onClick={() => this.handleEditNote(record.id, record.content, record.updated_at, record.user_id)}
               >
                 {t('notes.btn.edit')}
               </Button>{' '}

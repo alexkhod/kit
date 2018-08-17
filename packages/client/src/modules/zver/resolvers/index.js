@@ -14,6 +14,7 @@ const defaults = {
     id: null,
     content: '',
     updated_at: '',
+    user_id: '',
     __typename: TYPE_NAME_NOTE
   },
   block: {

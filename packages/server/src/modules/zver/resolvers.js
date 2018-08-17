@@ -245,9 +245,9 @@ export default pubsub => ({
       });
       return note;
     },
-    async addNoteOnBlock(obj, { input }, context) {
-      const [id] = await context.Zver.addNoteOnBlock(input);
-      const note = await context.Zver.getNote(id);
+    async addNoteOnBlock(obj, { input }, { Zver, user }) {
+      const [id] = await Zver.addNoteOnBlock(input, user);
+      const note = await Zver.getNote(id);
       // publish for edit note page
       pubsub.publish(NOTE_SUBSCRIPTION, {
         noteUpdated: {
@@ -259,9 +259,9 @@ export default pubsub => ({
       });
       return note;
     },
-    async addNoteOnModule(obj, { input }, context) {
-      const [id] = await context.Zver.addNoteOnModule(input);
-      const note = await context.Zver.getNote(id);
+    async addNoteOnModule(obj, { input }, { Zver, user }) {
+      const [id] = await Zver.addNoteOnModule(input, user);
+      const note = await Zver.getNote(id);
       // publish for edit note page
       pubsub.publish(NOTE_SUBSCRIPTION, {
         noteUpdated: {

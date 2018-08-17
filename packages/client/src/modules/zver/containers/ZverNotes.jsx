@@ -74,7 +74,7 @@ class ZverNotes extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.onNoteSelect({ id: null, content: '', updated_at: '' });
+    this.props.onNoteSelect({ id: null, content: '', updated_at: '', user_id: '' });
 
     if (this.subscription) {
       // unsubscribe
@@ -127,16 +127,17 @@ class ZverNotes extends React.Component {
 const ZverNotesWithApollo = compose(
   graphql(ADD_NOTE_ON_ZVER, {
     props: ({ mutate }) => ({
-      addNote: (content, zverId, updated_at = '') =>
+      addNote: (content, zverId, updated_at = '', user_id = '') =>
         mutate({
-          variables: { input: { content, zverId, updated_at } },
+          variables: { input: { content, zverId, updated_at, user_id } },
           optimisticResponse: {
             __typename: 'Mutation',
             addNoteOnZver: {
               __typename: 'Note',
               id: null,
               content: content,
-              updated_at: updated_at
+              updated_at: updated_at,
+              user_id: user_id
             }
           },
           updateQueries: {
@@ -158,16 +159,17 @@ const ZverNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      editNote: (id, content, updated_at = '') =>
+      editNote: (id, content, updated_at = '', user_id = '') =>
         mutate({
-          variables: { input: { id, zverId, content, updated_at } },
+          variables: { input: { id, zverId, content, updated_at, user_id } },
           optimisticResponse: {
             __typename: 'Mutation',
             editNote: {
               __typename: 'Note',
               id: id,
               content: content,
-              updated_at: updated_at
+              updated_at: updated_at,
+              user_id: user_id
             }
           }
         })

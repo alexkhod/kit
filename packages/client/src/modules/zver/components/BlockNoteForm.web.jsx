@@ -62,7 +62,7 @@ const BlockNoteFormWithFormik = withFormik({
     }
   ) {
     await onSubmit(values);
-    resetForm({ content: '', updated_at: '' });
+    resetForm({ content: '', updated_at: '', user_id: '' });
   },
   validate: values => validate(values),
   displayName: 'NoteForm', // helps with React DevTools,

@@ -36,6 +36,7 @@ type Note {
   content: String!
   created_at: String
   updated_at: String
+  user_id: String
 }
 
 # Edges for Zvers
@@ -168,6 +169,7 @@ input EditModuleInput {
 input AddNoteOnZverInput {
   content: String!
   updated_at: String
+  user_id: String
   # Needed for moduleUpdated Subscription filter
   zverId: Int
 }
@@ -176,6 +178,7 @@ input AddNoteOnZverInput {
 input AddNoteOnBlockInput {
   content: String!
   updated_at: String
+  user_id: String
   # Needed for moduleUpdated Subscription filter
   blockId: Int
 }
@@ -184,6 +187,7 @@ input AddNoteOnBlockInput {
 input AddNoteOnModuleInput {
   content: String!
   updated_at: String
+  user_id: String
   # Needed for moduleUpdated Subscription filter
   moduleId: Int
 }
@@ -202,6 +206,7 @@ input EditNoteInput {
   id: Int!
   content: String!
   updated_at: String
+  user_id: String
   # Needed for moduleUpdated Subscription filter
   zverId: Int
   blockId: Int

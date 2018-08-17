@@ -74,7 +74,7 @@ class BlockNotes extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.onNoteSelect({ id: null, content: '', updated_at: '' });
+    this.props.onNoteSelect({ id: null, content: '', updated_at: '', user_id: '' });
 
     if (this.subscription) {
       // unsubscribe
@@ -126,16 +126,17 @@ class BlockNotes extends React.Component {
 const BlockNotesWithApollo = compose(
   graphql(ADD_NOTE_ON_BLOCK, {
     props: ({ mutate }) => ({
-      addNote: (content, blockId, updated_at = '') =>
+      addNote: (content, blockId, updated_at = '', user_id = '') =>
         mutate({
-          variables: { input: { content, blockId, updated_at } },
+          variables: { input: { content, blockId, updated_at, user_id } },
           optimisticResponse: {
             __typename: 'Mutation',
             addNoteOnBlock: {
               __typename: 'Note',
               id: null,
               content: content,
-              updated_at: updated_at
+              updated_at: updated_at,
+              user_id: user_id
             }
           },
           updateQueries: {
@@ -157,16 +158,17 @@ const BlockNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { blockId }, mutate }) => ({
-      editNote: (id, content, updated_at = '') =>
+      editNote: (id, content, updated_at = '', user_id = '') =>
         mutate({
-          variables: { input: { id, blockId, content, updated_at } },
+          variables: { input: { id, blockId, content, updated_at, user_id } },
           optimisticResponse: {
             __typename: 'Mutation',
             editNote: {
               __typename: 'Note',
               id: id,
               content: content,
-              updated_at: updated_at
+              updated_at: updated_at,
+              user_id: user_id
             }
           }
         })

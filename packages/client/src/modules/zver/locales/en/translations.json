@@ -16,7 +16,8 @@
     "column": {
       "content": "Note",
       "actions": "Actions",
-      "updated": "Date"
+      "updated": "Date",
+      "user": "User"
     }
 
   },
