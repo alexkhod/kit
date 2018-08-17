@@ -135,7 +135,7 @@ input EditBlockInput {
   inv: String!
   isWork: Boolean!
   # Needed for blockUpdated Subscription filter
-  #zverId: Int!
+  zverId: Int!
 }
 
 # Input for addModule Mutation
@@ -144,6 +144,7 @@ input AddModuleInput {
   isWork: Boolean!
   # Needed for moduleUpdated Subscription filter
   blockId: Int!
+  zverId: Int!
 }
 
 # Input for editModule Mutation
@@ -159,7 +160,8 @@ input EditModuleInput {
   inv: String!
   isWork: Boolean!
   # Needed for moduleUpdated Subscription filter
-  #blockId: Int!
+  blockId: Int!
+  zverId: Int
 }
 
 # Input for addNoteOnZver Mutation
@@ -213,6 +215,7 @@ extend type Subscription {
   zversUpdated(endCursor: Int!): UpdateZverPayload
   # Subscription for blocks
   blockUpdated(zverId: Int!): UpdateBlockPayload
+  blockUpdatedEdit(id: Int!): UpdateBlockPayloadEdit
   # Subscription for module
   moduleUpdated(blockId: Int!): UpdateModulePayload
   # Subscription for note
@@ -233,6 +236,12 @@ type UpdateBlockPayload {
   mutation: String!
   id: Int
   zverId: Int!
+  node: Block
+}
+
+type UpdateBlockPayloadEdit {
+  mutation: String!
+  id: Int!
   node: Block
 }
 

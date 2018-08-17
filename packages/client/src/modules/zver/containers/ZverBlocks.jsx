@@ -137,7 +137,9 @@ const ZverBlocksWithApollo = compose(
               __typename: 'Block',
               id: null,
               inv: inv,
-              isWork: isWork
+              isWork: isWork,
+              notes: [],
+              modules: []
             }
           },
           updateQueries: {
@@ -157,7 +159,7 @@ const ZverBlocksWithApollo = compose(
         });
 
         if (history) {
-          return history.push('/block/' + blockData.data.addBlock.id, {
+          return history.push('/block/' + zverId + '/' + blockData.data.addBlock.id, {
             block: blockData.data.addBlock
           });
         } else if (navigation) {

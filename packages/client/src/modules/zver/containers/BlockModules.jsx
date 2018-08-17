@@ -47,6 +47,7 @@ function DeleteModule(prev, id) {
 
 class BlockModules extends React.Component {
   static propTypes = {
+    zverId: PropTypes.number.isRequired,
     blockId: PropTypes.number.isRequired,
     modules: PropTypes.array.isRequired,
     module: PropTypes.object.isRequired,
@@ -128,16 +129,17 @@ class BlockModules extends React.Component {
 const BlockModulesWithApollo = compose(
   graphql(ADD_MODULE, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      addModule: async (inv, isWork = false, blockId) => {
+      addModule: async (inv, isWork = false, blockId, zverId) => {
         let moduleData = await mutate({
-          variables: { input: { inv, isWork, blockId } },
+          variables: { input: { inv, isWork, blockId, zverId } },
           optimisticResponse: {
             __typename: 'Mutation',
             addModule: {
               __typename: 'Module',
               id: null,
               inv: inv,
-              isWork: isWork
+              isWork: isWork,
+              notes: []
             }
           },
           updateQueries: {
@@ -157,7 +159,7 @@ const BlockModulesWithApollo = compose(
         });
 
         if (history) {
-          return history.push('/module/' + moduleData.data.addModule.id, {
+          return history.push('/module/' + zverId + '/' + blockId + '/' + moduleData.data.addModule.id, {
             module: moduleData.data.addModule
           });
         } else if (navigation) {

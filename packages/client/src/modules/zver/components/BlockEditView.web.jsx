@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
@@ -12,10 +12,21 @@ import BlockModules from '../containers/BlockModules';
 // import settings from '../../../../../../settings';
 
 const onSubmit = (block, editBlock) => values => {
-  editBlock(block.id, values.inv, values.isWork);
+  editBlock(block.id, values.inv, values.isWork, values.zverId);
 };
 
-const BlockEditView = ({ loading, block, match, location, subscribeToMore, editBlock, t, history, navigation }) => {
+const BlockEditView = ({
+  loading,
+  block,
+  match,
+  location,
+  subscribeToMore,
+  editBlock,
+  t,
+  history,
+  navigation,
+  zverId
+}) => {
   let blockObj = block;
   // if new block was just added read it from router
   if (!blockObj && location.state) {
@@ -45,21 +56,20 @@ const BlockEditView = ({ loading, block, match, location, subscribeToMore, editB
     return (
       <PageLayout>
         {renderMetaData()}
-        {/*
-        <Link id="back-button" to="/blocks">
+        <Link id="back-button" to={'/zver/' + zverId}>
           {t('block.btn.back')}
         </Link>
-        */}
         <h2>
           {t(`block.label.edit`)} {t('block.label.block')}
         </h2>
-        <BlockForm onSubmit={onSubmit(blockObj, editBlock)} block={block} />
+        <BlockForm onSubmit={onSubmit(blockObj, editBlock)} block={block} zverId={zverId} />
         <br />
         {blockObj && (
           <BlockNotes blockId={Number(match.params.id)} notes={blockObj.notes} subscribeToMore={subscribeToMore} />
         )}
         {blockObj && (
           <BlockModules
+            zverId={Number(zverId)}
             blockId={Number(match.params.id)}
             modules={blockObj.modules}
             subscribeToMore={subscribeToMore}

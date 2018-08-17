@@ -52,6 +52,11 @@ exports.up = function(knex, Promise) {
           .inTable('module')
           .onDelete('CASCADE');
         table.string('content');
+        table
+          .integer('user_id')
+          .unsigned()
+          .references('id')
+          .inTable('user');
         table.timestamps(false, true);
       })
   ]);

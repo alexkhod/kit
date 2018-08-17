@@ -157,7 +157,7 @@ const ModuleNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { moduleId }, mutate }) => ({
-      editNote: (id, content, updated_at) =>
+      editNote: (id, content, updated_at = '') =>
         mutate({
           variables: { input: { id, moduleId, content, updated_at } },
           optimisticResponse: {

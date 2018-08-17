@@ -55,7 +55,7 @@ class ZverBlocksView extends React.PureComponent {
         dataIndex: 'inv',
         key: 'inv',
         render: (text, record) => (
-          <Link className="zver-link" to={`/block/${record.id}`}>
+          <Link className="zver-link" to={`/block/${zverId}/${record.id}`}>
             {text}
           </Link>
         )

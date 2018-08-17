@@ -1,5 +1,7 @@
 import { withFilter } from 'graphql-subscriptions';
 import { createBatchResolver } from 'graphql-resolve-batch';
+import withAuth from 'graphql-auth';
+import FieldError from '../../../../common/FieldError';
 
 const ZVER_SUBSCRIPTION = 'zver_subscription';
 const ZVERS_SUBSCRIPTION = 'zvers_subscription';
@@ -66,19 +68,29 @@ export default pubsub => ({
     })
   },
   Mutation: {
-    async addZver(obj, { input }, context) {
-      const [id] = await context.Zver.addZver(input);
-      const zver = await context.Zver.zver(id);
-      // publish for zver list
-      pubsub.publish(ZVERS_SUBSCRIPTION, {
-        zversUpdated: {
-          mutation: 'CREATED',
-          id,
-          node: zver
+    addZver: withAuth(async (obj, { input }, { Zver, user }) => {
+      const isAdmin = () => user.role === 'admin';
+      try {
+        const e = new FieldError();
+        if (!isAdmin()) {
+          e.setError();
         }
-      });
-      return zver;
-    },
+        e.throwIf();
+        const [id] = await Zver.addZver(input);
+        const zver = await Zver.zver(id);
+        // publish for zver list
+        pubsub.publish(ZVERS_SUBSCRIPTION, {
+          zversUpdated: {
+            mutation: 'CREATED',
+            id,
+            node: zver
+          }
+        });
+        return zver;
+      } catch (e) {
+        return { errors: e };
+      }
+    }),
     async deleteZver(obj, { id }, context) {
       const zver = await context.Zver.zver(id);
       const isDeleted = await context.Zver.deleteZver(id);
@@ -219,9 +231,9 @@ export default pubsub => ({
       });
       return module;
     },
-    async addNoteOnZver(obj, { input }, context) {
-      const [id] = await context.Zver.addNoteOnZver(input);
-      const note = await context.Zver.getNote(id);
+    async addNoteOnZver(obj, { input }, { Zver, user }) {
+      const [id] = await Zver.addNoteOnZver(input, user);
+      const note = await Zver.getNote(id);
       // publish for edit note page
       pubsub.publish(NOTE_SUBSCRIPTION, {
         noteUpdated: {

@@ -23,8 +23,8 @@ export default new Feature({
     <Route exact path="/zvers" component={Zver} />,
     <Route exact path="/zver/new" component={ZverAdd} />,
     <Route path="/zver/:id" component={ZverEdit} />,
-    <Route path="/block/:id" component={BlockEdit} />,
-    <Route path="/module/:id" component={ModuleEdit} />
+    <Route path="/block/:zid/:id" component={BlockEdit} />,
+    <Route path="/module/:zid/:bid/:id" component={ModuleEdit} />
   ],
   navItem: (
     <MenuItem key="/">

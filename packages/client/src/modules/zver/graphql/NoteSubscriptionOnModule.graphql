@@ -1,4 +1,4 @@
-#import "./Module.graphql"
+#import "./Note.graphql"
 
 subscription onNoteUpdatedOnModule($moduleId: Int!) {
   noteUpdatedOnModule(moduleId: $moduleId) {

@@ -143,8 +143,8 @@ export default class Zver {
       });
   }
 
-  addNoteOnZver({ content, zverId }) {
-    return returnId(knex('note')).insert({ content, zver_id: zverId });
+  addNoteOnZver({ content, zverId }, { id }) {
+    return returnId(knex('note')).insert({ content, zver_id: zverId, user_id: id });
   }
 
   addNoteOnBlock({ content, blockId }) {

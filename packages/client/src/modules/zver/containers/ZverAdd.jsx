@@ -29,6 +29,7 @@ export default graphql(ADD_ZVER, {
             id: null,
             inv: inv,
             isWork: isWork,
+            blocks: [],
             notes: []
           }
         },

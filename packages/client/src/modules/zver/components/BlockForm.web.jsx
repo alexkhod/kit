@@ -40,13 +40,15 @@ BlockForm.propTypes = {
   submitting: PropTypes.bool,
   values: PropTypes.object,
   block: PropTypes.object,
-  t: PropTypes.func
+  t: PropTypes.func,
+  zverId: PropTypes.string
 };
 
 const BlockFormWithFormik = withFormik({
   mapPropsToValues: props => ({
     inv: props.block && props.block.inv,
-    isWork: props.block && props.block.isWork
+    isWork: props.block && props.block.isWork,
+    zverId: props.zverId
   }),
   validate: values => validate(values),
   handleSubmit(

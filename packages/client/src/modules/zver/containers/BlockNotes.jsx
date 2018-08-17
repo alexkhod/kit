@@ -157,7 +157,7 @@ const BlockNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { blockId }, mutate }) => ({
-      editNote: (id, content, updated_at) =>
+      editNote: (id, content, updated_at = '') =>
         mutate({
           variables: { input: { id, blockId, content, updated_at } },
           optimisticResponse: {

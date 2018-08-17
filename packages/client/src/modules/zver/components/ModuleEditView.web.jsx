@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import translate from '../../../i18n';
 import { PageLayout } from '../../common/components/web';
@@ -10,10 +10,10 @@ import ModuleNotes from '../containers/ModuleNotes';
 // import settings from '../../../../../../settings';
 
 const onSubmit = (module, editModule) => values => {
-  editModule(module.id, values.inv, values.isWork);
+  editModule(module.id, values.inv, values.isWork, values.zverId, values.blockId);
 };
 
-const ModuleEditView = ({ loading, module, match, location, subscribeToMore, editModule, t }) => {
+const ModuleEditView = ({ loading, module, match, location, subscribeToMore, editModule, t, zverId, blockId }) => {
   let moduleObj = module;
   // if new module was just added read it from router
   if (!moduleObj && location.state) {
@@ -43,15 +43,13 @@ const ModuleEditView = ({ loading, module, match, location, subscribeToMore, edi
     return (
       <PageLayout>
         {renderMetaData()}
-        {/*
-        <Link id="back-button" to="/modules">
+        <Link id="back-button" to={'/block/' + zverId + '/' + blockId}>
           {t('module.btn.back')}
         </Link>
-        */}
         <h2>
           {t(`module.label.edit`)} {t('module.label.module')}
         </h2>
-        <ModuleForm onSubmit={onSubmit(moduleObj, editModule)} module={module} />
+        <ModuleForm onSubmit={onSubmit(moduleObj, editModule)} module={module} zverId={zverId} blockId={blockId} />
         <br />
         {moduleObj && (
           <ModuleNotes moduleId={Number(match.params.id)} notes={moduleObj.notes} subscribeToMore={subscribeToMore} />

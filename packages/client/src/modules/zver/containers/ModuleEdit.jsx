@@ -13,7 +13,8 @@ class ModuleEdit extends React.Component {
     module: PropTypes.object,
     subscribeToMore: PropTypes.func.isRequired,
     history: PropTypes.object,
-    navigation: PropTypes.object
+    navigation: PropTypes.object,
+    match: PropTypes.object
   };
 
   constructor(props) {
@@ -53,12 +54,12 @@ class ModuleEdit extends React.Component {
     }
   }
 
-  subscribeToModuleEdit = moduleId => {
+  subscribeToModuleEdit = blockId => {
     const { subscribeToMore, history, navigation } = this.props;
 
     this.subscription = subscribeToMore({
       document: MODULE_SUBSCRIPTION,
-      variables: { id: moduleId },
+      variables: { blockId: blockId },
       updateQuery: (
         prev,
         {
@@ -82,7 +83,9 @@ class ModuleEdit extends React.Component {
   };
 
   render() {
-    return <ModuleEditView {...this.props} />;
+    return (
+      <ModuleEditView {...this.props} zverId={this.props.match.params.zid} blockId={this.props.match.params.bid} />
+    );
   }
 }
 
@@ -107,17 +110,16 @@ export default compose(
   }),
   graphql(EDIT_MODULE, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      editModule: async (id, inv, isWork) => {
+      editModule: async (id, inv, isWork, zverId, blockId) => {
         await mutate({
-          variables: { input: { id, inv: inv.trim(), isWork: isWork } }
+          variables: { input: { id, inv: inv.trim(), isWork: isWork, zverId: zverId, blockId: blockId } }
         });
-        /*if (history) {
-          return history.push('/modules');
+        if (history) {
+          return history.push('/block/' + zverId + '/' + blockId);
         }
         if (navigation) {
           return navigation.navigate('ModuleList');
         }
-        */
       }
     })
   })

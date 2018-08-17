@@ -132,7 +132,7 @@ const ZverNotesWithApollo = compose(
           variables: { input: { content, zverId, updated_at } },
           optimisticResponse: {
             __typename: 'Mutation',
-            addNote: {
+            addNoteOnZver: {
               __typename: 'Note',
               id: null,
               content: content,
@@ -144,12 +144,12 @@ const ZverNotesWithApollo = compose(
               prev,
               {
                 mutationResult: {
-                  data: { addNote }
+                  data: { addNoteOnZver }
                 }
               }
             ) => {
               if (prev.zver) {
-                return AddNote(prev, addNote);
+                return AddNote(prev, addNoteOnZver);
               }
             }
           }
@@ -158,7 +158,7 @@ const ZverNotesWithApollo = compose(
   }),
   graphql(EDIT_NOTE, {
     props: ({ ownProps: { zverId }, mutate }) => ({
-      editNote: (id, content, updated_at) =>
+      editNote: (id, content, updated_at = '') =>
         mutate({
           variables: { input: { id, zverId, content, updated_at } },
           optimisticResponse: {

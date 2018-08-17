@@ -13,7 +13,8 @@ class BlockEdit extends React.Component {
     block: PropTypes.object,
     subscribeToMore: PropTypes.func.isRequired,
     history: PropTypes.object,
-    navigation: PropTypes.object
+    navigation: PropTypes.object,
+    match: PropTypes.object
   };
 
   constructor(props) {
@@ -53,12 +54,12 @@ class BlockEdit extends React.Component {
     }
   }
 
-  subscribeToBlockEdit = blockId => {
+  subscribeToBlockEdit = zverId => {
     const { subscribeToMore, history, navigation } = this.props;
 
     this.subscription = subscribeToMore({
       document: BLOCK_SUBSCRIPTION,
-      variables: { id: blockId },
+      variables: { zverId: zverId },
       updateQuery: (
         prev,
         {
@@ -82,7 +83,7 @@ class BlockEdit extends React.Component {
   };
 
   render() {
-    return <BlockEditView {...this.props} />;
+    return <BlockEditView {...this.props} zverId={this.props.match.params.zid} />;
   }
 }
 
@@ -107,13 +108,12 @@ export default compose(
   }),
   graphql(EDIT_BLOCK, {
     props: ({ ownProps: { history, navigation }, mutate }) => ({
-      editBlock: async (id, inv, isWork) => {
+      editBlock: async (id, inv, isWork, zverId) => {
         await mutate({
-          variables: { input: { id, inv: inv.trim(), isWork: isWork } }
+          variables: { input: { id, inv: inv.trim(), isWork: isWork, zverId: zverId } }
         });
         if (history) {
-          //return history.push('/');
-          return console.log(1, history);
+          return history.push('/zver/' + zverId);
         }
         if (navigation) {
           //return navigation.navigate('ZverList');

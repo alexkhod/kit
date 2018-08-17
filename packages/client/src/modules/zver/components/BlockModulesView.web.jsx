@@ -9,6 +9,7 @@ import { IfLoggedIn } from '../../user/containers/AuthBase';
 
 class BlockModulesView extends React.PureComponent {
   static propTypes = {
+    zverId: PropTypes.number.isRequired,
     blockId: PropTypes.number.isRequired,
     modules: PropTypes.array.isRequired,
     module: PropTypes.object,
@@ -36,10 +37,10 @@ class BlockModulesView extends React.PureComponent {
   };
 
   onSubmit = () => values => {
-    const { module, blockId, addModule, editModule, onModuleSelect } = this.props;
+    const { module, blockId, zverId, addModule, editModule, onModuleSelect } = this.props;
 
     if (module.id === null) {
-      addModule(values.inv, values.isWork, blockId);
+      addModule(values.inv, values.isWork, blockId, zverId);
     } else {
       editModule(module.id, values.inv);
     }
@@ -48,14 +49,14 @@ class BlockModulesView extends React.PureComponent {
   };
 
   render() {
-    const { blockId, modules, module, t } = this.props;
+    const { zverId, blockId, modules, module, t } = this.props;
     const columns = [
       {
         title: t('modules.column.content'),
         dataIndex: 'inv',
         key: 'inv',
         render: (text, record) => (
-          <Link className="block-link" to={`/module/${record.id}`}>
+          <Link className="block-link" to={`/module/${zverId}/${blockId}/${record.id}`}>
             {text}
           </Link>
         )
