@@ -20,6 +20,7 @@ const NavLinkWithI18n = translate()(({ t }) => (
 
 export default new Feature({
   route: [
+    <Route exact path="/" component={Zver} />,
     <Route exact path="/zvers" component={Zver} />,
     <Route exact path="/zver/new" component={ZverAdd} />,
     <Route path="/zver/:id" component={ZverEdit} />,
