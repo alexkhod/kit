@@ -11,7 +11,8 @@ export async function seed(knex, Promise) {
       });
       await returnId(knex('note')).insert({
         zver_id: `${zver[0]}`,
-        content: 'Работает'
+        content: 'Работает',
+        user_id: 'admin'
       });
 
       await Promise.all(
@@ -23,7 +24,8 @@ export async function seed(knex, Promise) {
           });
           await returnId(knex('note')).insert({
             block_id: `${block[0]}`,
-            content: 'Работает'
+            content: 'Работает',
+            user_id: 'admin'
           });
 
           await Promise.all(
@@ -35,7 +37,8 @@ export async function seed(knex, Promise) {
               });
               return returnId(knex('note')).insert({
                 module_id: `${module[0]}`,
-                content: 'Работает'
+                content: 'Работает',
+                user_id: 'admin'
               });
             })
           );

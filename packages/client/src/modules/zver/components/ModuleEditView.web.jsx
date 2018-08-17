@@ -43,9 +43,16 @@ const ModuleEditView = ({ loading, module, match, location, subscribeToMore, edi
     return (
       <PageLayout>
         {renderMetaData()}
-        <Link id="back-button" to={'/block/' + zverId + '/' + blockId}>
-          {t('module.btn.back')}
-        </Link>
+        <p>
+          <Link id="back-button" to={'/zver/' + zverId}>
+            {t('zver.title2')} {zverId}
+          </Link>{' '}
+          -{' '}
+          <Link id="back-button" to={'/block/' + zverId + '/' + blockId}>
+            {t('block.title2')} {blockId}
+          </Link>{' '}
+          - {t('module.title2')} {match.params.id}
+        </p>
         <h2>
           {t(`module.label.edit`)} {t('module.label.module')}
         </h2>

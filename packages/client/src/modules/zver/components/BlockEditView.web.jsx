@@ -56,9 +56,12 @@ const BlockEditView = ({
     return (
       <PageLayout>
         {renderMetaData()}
-        <Link id="back-button" to={'/zver/' + zverId}>
-          {t('block.btn.back')}
-        </Link>
+        <p>
+          <Link id="back-button" to={'/zver/' + zverId}>
+            {t('zver.title2')} {zverId}
+          </Link>{' '}
+          - {t('block.title2')} {match.params.id}
+        </p>
         <h2>
           {t(`block.label.edit`)} {t('block.label.block')}
         </h2>
