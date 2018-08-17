@@ -28,7 +28,7 @@ const ZverAddView = ({ addZver, t }) => {
   return (
     <PageLayout>
       {renderMetaData()}
-      <Link id="back-button" to="/">
+      <Link id="back-button" to="/zvers">
         {t('zver.btn.back')}
       </Link>
       <h2>
