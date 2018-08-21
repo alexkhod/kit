@@ -27,9 +27,11 @@ const ModuleForm = ({ values, handleSubmit, submitting, t }) => {
         label={t('module.field.isWork')}
         checked={values.isWork}
       />
-      <Button color="primary" type="submit" disabled={submitting}>
-        {t('module.btn.submit')}
-      </Button>
+      <IfLoggedIn>
+        <Button color="primary" type="submit" disabled={submitting}>
+          {t('module.btn.submit')}
+        </Button>
+      </IfLoggedIn>
     </Form>
   );
 };

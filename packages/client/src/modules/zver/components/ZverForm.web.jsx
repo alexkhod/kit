@@ -27,9 +27,11 @@ const ZverForm = ({ values, handleSubmit, submitting, t }) => {
         label={t('zver.field.content')}
         checked={values.isWork}
       />
-      <Button color="primary" type="submit" disabled={submitting}>
-        {t('zver.btn.submit')}
-      </Button>
+      <IfLoggedIn>
+        <Button color="primary" type="submit" disabled={submitting}>
+          {t('zver.btn.submit')}
+        </Button>
+      </IfLoggedIn>
     </Form>
   );
 };

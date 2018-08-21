@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
 import ModuleNoteForm from './ModuleNoteForm';
-import { IfLoggedIn } from '../../user/containers/AuthBase';
+import { IfLoggedIn, IfNotLoggedIn } from '../../user/containers/AuthBase';
 
 class ModuleNotesView extends React.PureComponent {
   static propTypes = {
@@ -48,7 +48,7 @@ class ModuleNotesView extends React.PureComponent {
 
   render() {
     const { moduleId, notes, note, t } = this.props;
-    const columns = [
+    const columnsForLoggedIn = [
       {
         title: t('notes.column.user'),
         dataIndex: 'user_id',
@@ -93,14 +93,37 @@ class ModuleNotesView extends React.PureComponent {
       }
     ];
 
-    //console.log(notes);
+    const columnsForNotLoggedIn = [
+      {
+        title: t('notes.column.user'),
+        dataIndex: 'user_id',
+        key: 'user_id'
+      },
+      {
+        title: t('notes.column.updated'),
+        dataIndex: 'updated_at',
+        key: 'updated_at'
+      },
+      {
+        title: t('notes.column.content'),
+        dataIndex: 'content',
+        key: 'content'
+      }
+    ];
 
     return (
       <div>
         <h3>{t('notes.title')}</h3>
-        <ModuleNoteForm moduleId={moduleId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
+        <IfLoggedIn>
+          <ModuleNoteForm moduleId={moduleId} onSubmit={this.onSubmit()} initialValues={note} note={note} />
+        </IfLoggedIn>
         <h1 />
-        <Table dataSource={notes} columns={columns} />
+        <IfLoggedIn>
+          <Table dataSource={notes} columns={columnsForLoggedIn} />
+        </IfLoggedIn>
+        <IfNotLoggedIn>
+          <Table dataSource={notes} columns={columnsForNotLoggedIn} />
+        </IfNotLoggedIn>
       </div>
     );
   }

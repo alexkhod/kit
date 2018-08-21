@@ -27,9 +27,11 @@ const BlockForm = ({ values, handleSubmit, submitting, t }) => {
         label={t('block.field.isWork')}
         checked={values.isWork}
       />
-      <Button color="primary" type="submit" disabled={submitting}>
-        {t('block.btn.submit')}
-      </Button>
+      <IfLoggedIn>
+        <Button color="primary" type="submit" disabled={submitting}>
+          {t('block.btn.submit')}
+        </Button>
+      </IfLoggedIn>
     </Form>
   );
 };
