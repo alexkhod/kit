@@ -1,7 +1,7 @@
 export default {
   name: '',
   logging: {
-    level: 'info',
+    level: ['production'].indexOf(process.env.NODE_ENV) < 0 ? 'debug' : 'info',
     debugSQL: false,
     apolloLogging: ['production'].indexOf(process.env.NODE_ENV) < 0
   },

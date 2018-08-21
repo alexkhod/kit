@@ -35,15 +35,12 @@ export default () => ({
       {
         input: { usernameOrEmail, password }
       },
-      {
-        req,
-        req: { t }
-      }
+      { req }
     ) {
       try {
         const user = await User.getUserByUsernameOrEmail(usernameOrEmail);
 
-        await validateUserPassword(user, password, t);
+        await validateUserPassword(user, password, req.t);
 
         const tokens = await access.grantAccess(user, req);
 
@@ -52,16 +49,9 @@ export default () => ({
         return { errors: e };
       }
     },
-    async register(
-      obj,
-      { input },
-      {
-        mailer,
-        req,
-        req: { t }
-      }
-    ) {
+    async register(obj, { input }, { mailer, User, req }) {
       try {
+        const { t } = req;
         const e = new FieldError();
         const userExists = await User.getUserByUsername(input.username);
         if (userExists) {
@@ -146,9 +136,10 @@ export default () => ({
     },
     async resetPassword(
       obj,
+      { input },
       {
-        input,
-        req: { t }
+        req: { t },
+        User
       }
     ) {
       try {
