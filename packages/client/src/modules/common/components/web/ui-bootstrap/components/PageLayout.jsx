@@ -23,9 +23,7 @@ class PageLayout extends React.Component {
           <section className="d-flex flex-column">{navBar !== false && <NavBar />}</section>
           <Container id="content">{children}</Container>
         </section>
-        <Footer className="d-flex flex-shrink-0 justify-content-center">
-          <span>&copy; 2017. {settings.app.name}.</span>
-        </Footer>
+        <Footer className="d-flex flex-shrink-0 justify-content-center" />
       </section>
     );
   }
