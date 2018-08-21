@@ -1,4 +1,4 @@
-import testmodule from './zver';
+import zver from './zver';
 import cookies from './cookies';
 import i18n from './i18n';
 import counter from './counter';
@@ -15,7 +15,7 @@ import './debug';
 import Feature from './connector';
 
 export default new Feature(
-  testmodule,
+  zver,
   cookies,
   i18n,
   counter,

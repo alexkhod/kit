@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import cn from 'classnames';
 import { Link } from 'react-router-dom';
 import { PageLayout, Table, Button, Pagination } from '../../common/components/web';
 import translate from '../../../i18n';
@@ -69,7 +70,12 @@ class ZverList extends React.PureComponent {
           dataIndex: 'inv',
           key: 'inv',
           render: (text, record) => (
-            <Link className="zver-link" to={`/zver/${record.id}`}>
+            <Link
+              className={cn({
+                ['alert-warning']: !record.isWork
+              })}
+              to={`/zver/${record.id}`}
+            >
               {text}
             </Link>
           )

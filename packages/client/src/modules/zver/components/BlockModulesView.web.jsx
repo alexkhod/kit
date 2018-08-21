@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import cn from 'classnames';
 
 import translate from '../../../i18n';
 import { Table, Button } from '../../common/components/web';
@@ -56,7 +57,12 @@ class BlockModulesView extends React.PureComponent {
         dataIndex: 'inv',
         key: 'inv',
         render: (text, record) => (
-          <Link className="block-link" to={`/module/${zverId}/${blockId}/${record.id}`}>
+          <Link
+            className={cn({
+              ['alert-warning']: !record.isWork
+            })}
+            to={`/module/${zverId}/${blockId}/${record.id}`}
+          >
             {text}
           </Link>
         )
